@@ -7,5 +7,8 @@ public class Minimap {
             this.rooms.put(room.getTitle(), room);
         }
     }
+    public static void setExits(){
+
+    }
 }
 

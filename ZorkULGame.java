@@ -71,15 +71,21 @@ public class ZorkULGame {
     }*/
     public void createRooms(){
         Room[] rooms = new Room[27];
-        for (int x=0,i=0;x<3;x++){
-            for (int y=0;y<3;y++){
-                for (int z=0;z<3;z++){
-                    rooms[i++] = new Room("room"+x+y+z, "room"+x+y+z);
+        for (byte x=0,i=0;x<3;x++){
+            for (byte y=0;y<3;y++){
+                for (byte z=0;z<3;z++){
+                    rooms[i++] = new Room("room"+i,x,y,z);
                 }
             }
         }
-        for (room)
         new Minimap(rooms);
+
+        Item leftBoot = new Item("leftboot", "1 boot");
+        Item rightBoot = new Item("rightboot", "1 boot");
+        ArrayList<Item> playerInventory = new ArrayList<>();
+        playerInventory.add(leftBoot);
+        playerInventory.add(rightBoot);
+        player = new Character("player", rooms[0], playerInventory);
 
     }
 
@@ -99,7 +105,7 @@ public class ZorkULGame {
         System.out.println("Welcome to the University adventure!");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(player.getCurrentRoom().getLongDescription());
+        System.out.println(player.getCurrentRoom().getTitle());
     }
 
     private boolean processCommand(Command command) {
@@ -187,7 +193,7 @@ public class ZorkULGame {
             System.out.println("There is no door!");
         } else {
             player.setCurrentRoom(nextRoom);
-            System.out.println(player.getCurrentRoom().getLongDescription());
+            System.out.println(player.getCurrentRoom().getTitle());
         }
     }
 

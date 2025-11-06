@@ -41,7 +41,7 @@ public class Character {
         Room nextRoom = currentRoom.getExit(direction);
         if (nextRoom != null) {
             currentRoom = nextRoom;
-            System.out.println("You moved to: " + currentRoom.getDescription());
+            System.out.println("You moved to: " + currentRoom.getTitle());
         } else {
             System.out.println("You can't go that way!");
         }
