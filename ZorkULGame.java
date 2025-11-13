@@ -167,6 +167,10 @@ public class ZorkULGame {
                     System.out.println("drop what?");
                 }
                 break;
+            case "save":
+                Serializer serializer = new Serializer();
+                serializer.write(player.getCurrentRoom());
+                break;
             default:
                 System.out.println("I don't know what you mean...");
                 break;
@@ -200,8 +204,9 @@ public class ZorkULGame {
 
     public static void main(String[] args) {
         ZorkULGame game = new ZorkULGame();
-        GUI gui = new GUI();
+        Serializer serializer = new Serializer();
+        serializer.read("room1");
+        //GUI gui = new GUI();
         game.play();
-
     }
 }

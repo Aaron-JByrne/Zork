@@ -1,30 +1,22 @@
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 
-public class Room {
+public class Room implements Serializable {
     private String roomTitle;
-    //private String description;
     private Map<String, Room> exits;// Map direction to neighboring Room
     private Inventory inventory;
-    private byte x;
-    private byte y;
-    private byte z;
+    private int id;
 
     public Room(String title) {
         this.roomTitle = title;
-        this.x = x;
-        this.y = y;
-        this.z = z;
         exits = new HashMap<>();
         this.inventory = new Inventory(this.roomTitle);
     }
 
     public Room(String title, Inventory defaultInventory) {
         this.roomTitle = title;
-        this.x = x;
-        this.y = y;
-        this.z = z;
         exits = new HashMap<>();
         this.inventory = defaultInventory;
         System.out.println("Room created with inventory");
