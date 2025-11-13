@@ -13,6 +13,7 @@ Overall, it recreates the classic Zork interactive fiction experience with a uni
 emphasising exploration and simple command-driven gameplay
 */
 
+
 import java.sql.Array;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -27,8 +28,9 @@ public class ZorkULGame {
         parser = new Parser();
     }
 
-    /*private void createRooms() {
+    private void createRooms() {
         Room outside, theatre, pub, lab, office, classroom;
+        Room room1, room2, room3, room4, room5, room6;
 
         ArrayList<Item> outsideItems = new ArrayList<>();
         Item testitem = new Item("testitem", "this is a test item");
@@ -36,39 +38,39 @@ public class ZorkULGame {
         Inventory outsideInventory = new Inventory("Outside", outsideItems);
 
         // create rooms
-        outside = new Room("outside","outside the main entrance of the university", outsideInventory);
-        theatre = new Room("theatre", "in a lecture theatre");
-        pub = new Room("pub","in the campus pub");
-        lab = new Room("lab","in a computing lab");
-        office = new Room("office","in the computing admin office");
-        classroom = new Room("classroom", "in a classroom");
-        new Minimap(outside,theatre,pub,lab,office,classroom);
+        room1 = new Room("room1");
+        room2 = new Room("room2");
+        room3 = new Room("room3");
+        room4 = new Room("room4");
+        room5 = new Room("room5");
+        room6 = new Room("room6");
+
+        new Minimap(room1,room2,room3,room4,room5,room6);
 
         // initialise room exits
-        outside.setExit("east", theatre);
-        outside.setExit("south", lab);
-        outside.setExit("west", pub);
-        outside.setExit("north", classroom);
+        room1.setExit("east", room3);
+        room1.setExit("south", room4);
+        room1.setExit("west", room5);
+        room1.setExit("north", room2);
 
-        theatre.setExit("west", outside);
+        room3.setExit("west", room1);
 
-        pub.setExit("east", outside);
+        room5.setExit("east", room1);
 
-        lab.setExit("east", office);
-        lab.setExit("north", outside);
+        room4.setExit("east", room6);
+        room4.setExit("north", room1);
 
-        office.setExit("west", lab);
+        room6.setExit("west", room4);
 
-        classroom.setExit("south", outside);
+        room2.setExit("south", room1);
 
         // create the player character and start outside
-        Item leftBoot = new Item("leftboot", "1 boot");
-        Item rightBoot = new Item("rightboot", "1 boot");
+        Item torch = new Item("torch", "a torch");
         ArrayList<Item> playerInventory = new ArrayList<>();
-        playerInventory.add(leftBoot);
-        playerInventory.add(rightBoot);
-        player = new Character("player", outside, playerInventory);
-    }*/
+        playerInventory.add(torch);
+        player = new Character("player", room1, playerInventory);
+    }
+    /*
     public void createRooms(){
         Room[] rooms = new Room[27];
         for (byte x=0,i=0;x<3;x++){
@@ -80,14 +82,13 @@ public class ZorkULGame {
         }
         new Minimap(rooms);
 
-        Item leftBoot = new Item("leftboot", "1 boot");
-        Item rightBoot = new Item("rightboot", "1 boot");
+
+        Item torch = new Item("torch", "a torch");
         ArrayList<Item> playerInventory = new ArrayList<>();
-        playerInventory.add(leftBoot);
-        playerInventory.add(rightBoot);
+        playerInventory.add(torch);
         player = new Character("player", rooms[0], playerInventory);
 
-    }
+    }*/
 
     public void play() {
         printWelcome();
@@ -199,6 +200,8 @@ public class ZorkULGame {
 
     public static void main(String[] args) {
         ZorkULGame game = new ZorkULGame();
+        GUI gui = new GUI();
         game.play();
+
     }
 }

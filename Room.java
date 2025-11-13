@@ -11,7 +11,7 @@ public class Room {
     private byte y;
     private byte z;
 
-    public Room(String title, byte x, byte y, byte z) {
+    public Room(String title) {
         this.roomTitle = title;
         this.x = x;
         this.y = y;
@@ -20,7 +20,7 @@ public class Room {
         this.inventory = new Inventory(this.roomTitle);
     }
 
-    public Room(String title, byte x, byte y, byte z, Inventory defaultInventory) {
+    public Room(String title, Inventory defaultInventory) {
         this.roomTitle = title;
         this.x = x;
         this.y = y;

@@ -17,7 +17,6 @@ public class Character {
         this.name = name;
         this.currentRoom = startingRoom;
         this.inventory = new Inventory("Inventory", items);
-        System.out.println("Character created with inventory");
         System.out.println(items);
     }
 
