@@ -9,7 +9,6 @@ public class Serializer {
             e.printStackTrace();
         }
     }
-
     public void read(String roomName){
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(String.format("%s.ser", roomName)))) {
             Room deserializedRoom = (Room) in.readObject();

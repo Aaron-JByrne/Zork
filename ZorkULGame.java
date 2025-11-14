@@ -21,54 +21,42 @@ import java.util.Scanner;
 
 public class ZorkULGame {
     private Parser parser;
+    private Parser guiParser;
     private Character player;
 
     public ZorkULGame() {
         createRooms();
         parser = new Parser();
+        guiParser = new Parser();
     }
 
     private void createRooms() {
-        Room outside, theatre, pub, lab, office, classroom;
-        Room room1, room2, room3, room4, room5, room6;
+        Room Outside, Forest, Hut;
+        //Room room1, room2, room3, room4, room5, room6;
 
         ArrayList<Item> outsideItems = new ArrayList<>();
-        Item testitem = new Item("testitem", "this is a test item");
+        Item testitem = new Item("testItem", "this is a test item");
         outsideItems.add(testitem);
         Inventory outsideInventory = new Inventory("Outside", outsideItems);
 
         // create rooms
-        room1 = new Room("room1");
-        room2 = new Room("room2");
-        room3 = new Room("room3");
-        room4 = new Room("room4");
-        room5 = new Room("room5");
-        room6 = new Room("room6");
+        Outside = new Room("Outside");
+        Forest = new Room("Forest");
+        Hut = new Room("Hut");
 
-        new Minimap(room1,room2,room3,room4,room5,room6);
+        new Minimap(Outside, Forest, Hut);
 
         // initialise room exits
-        room1.setExit("east", room3);
-        room1.setExit("south", room4);
-        room1.setExit("west", room5);
-        room1.setExit("north", room2);
-
-        room3.setExit("west", room1);
-
-        room5.setExit("east", room1);
-
-        room4.setExit("east", room6);
-        room4.setExit("north", room1);
-
-        room6.setExit("west", room4);
-
-        room2.setExit("south", room1);
+        Outside.setExit("south", Forest);
+        Forest.setExit("north", Outside);
+        Forest.setExit("east", Hut);
+        Hut.setExit("west", Forest);
 
         // create the player character and start outside
-        Item torch = new Item("torch", "a torch");
+        Item arrow = new Item("Arrow", "A mysterious arrow");
         ArrayList<Item> playerInventory = new ArrayList<>();
-        playerInventory.add(torch);
-        player = new Character("player", room1, playerInventory);
+        playerInventory.add(arrow);
+        player = new Character("player", Outside, playerInventory);
     }
     /*
     public void createRooms(){
@@ -98,22 +86,28 @@ public class ZorkULGame {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
-        System.out.println("Thank you for playing. Goodbye.");
+        //System.out.println("Thank you for playing. Goodbye.");
+        Console.print("Thank you for playing. Goodbye.");
     }
 
     private void printWelcome() {
-        System.out.println();
-        System.out.println("Welcome to the University adventure!");
-        System.out.println("Type 'help' if you need help.");
-        System.out.println();
-        System.out.println(player.getCurrentRoom().getTitle());
+//        System.out.println();
+//        System.out.println("Welcome to the University adventure!");
+//        System.out.println("Type 'help' if you need help.");
+//        System.out.println();
+//        System.out.println(player.getCurrentRoom().getTitle());
+
+        Console.print("Welcome to the University adventure!");
+        Console.print("Type 'help' if you need help.");
+        Console.print(player.getCurrentRoom().getTitle());
     }
 
     private boolean processCommand(Command command) {
         String commandWord = command.getCommandWord();
 
         if (commandWord == null) {
-            System.out.println("I don't understand your command...");
+            //System.out.println("I don't understand your command...");
+            Console.print("I don't understand your command...");
             return false;
         }
 
@@ -126,19 +120,23 @@ public class ZorkULGame {
                 break;
             case "quit":
                 if (command.hasSecondWord()) {
-                    System.out.println("Quit what?");
+                    //System.out.println("Quit what?");
+                    Console.print("Quit what?");
                     return false;
                 } else {
                     return true; // signal to quit
                 }
             case "tp":
-                System.out.printf("Teleporting to %s\n", command.getSecondWord());
+                //System.out.printf("Teleporting to %s\n", command.getSecondWord());
+                Console.print("Teleporting to " + command.getSecondWord());
+
                 if (command.hasSecondWord()) {
                     player.setCurrentRoom(Minimap.rooms.get(command.getSecondWord()));
                 }
                 break;
             case "where":
-                System.out.printf("You are in %s\n", player.getCurrentRoom().getTitle());
+                //System.out.printf("You are in %s\n", player.getCurrentRoom().getTitle());
+                Console.print("You are in " + player.getCurrentRoom().getTitle());
                 break;
             case "look":
                 player.getCurrentRoom().displayInventory();
@@ -148,23 +146,28 @@ public class ZorkULGame {
                     Inventory.displayInventory(command.getSecondWord());
                 }
                 else{
-                    System.out.println("open what?");
+                    //System.out.println("open what?");
+                    Console.print("open what?");
                 }
                 break;
             case "take":
-                if (command.hasSecondWord()) {
-                    System.out.println("Taking " + command.getSecondWord());
+                if (command.hasSecondWord() && player.getCurrentRoom().getInventory().hasItem(command.getSecondWord())) {
+                    //System.out.println("Taking " + command.getSecondWord());
+                    Console.print("Taking " + command.getSecondWord());
                     player.getCurrentRoom().getInventory().sendItem(player.getInventory(), player.getCurrentRoom().getInventory().getItem(command.getSecondWord()));
-                }else{
-                    System.out.println("take what?");
+                    }else{
+                    //System.out.println("take what?");
+                    Console.print("take what?");
                 }
                 break;
             case "drop":
-                if (command.hasSecondWord()) {
-                    System.out.println("Dropping " + command.getSecondWord());
+                if (command.hasSecondWord() && player.getInventory().hasItem(command.getSecondWord())) {
+                    //System.out.println("Dropping " + command.getSecondWord());
+                    Console.print("Dropping " + command.getSecondWord());
                     player.getInventory().sendItem(player.getCurrentRoom().getInventory(), player.getInventory().getItem(command.getSecondWord()));
                 } else{
-                    System.out.println("drop what?");
+                    //System.out.println("drop what?");
+                    Console.print("drop what?");
                 }
                 break;
             case "save":
@@ -179,14 +182,17 @@ public class ZorkULGame {
     }
 
     private void printHelp() {
-        System.out.println("You are lost. You are alone. You wander around the university.");
-        System.out.print("Your command words are: ");
+        //System.out.println("You are lost. You are alone. You wander around the university.");
+        //System.out.print("Your command words are: ");
+        Console.print("You are lost. You are alone. You wander around the university.");
+        Console.print("Your command words are: ");
         parser.showCommands();
     }
 
     private void goRoom(Command command) {
         if (!command.hasSecondWord()) {
-            System.out.println("Go where?");
+            //System.out.println("Go where?");
+            Console.print("Go Where?");
             return;
         }
 
@@ -195,7 +201,8 @@ public class ZorkULGame {
         Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
-            System.out.println("There is no door!");
+            //System.out.println("There is no door!");
+            Console.print("There is no door!");
         } else {
             player.setCurrentRoom(nextRoom);
             System.out.println(player.getCurrentRoom().getTitle());
@@ -204,9 +211,9 @@ public class ZorkULGame {
 
     public static void main(String[] args) {
         ZorkULGame game = new ZorkULGame();
-        Serializer serializer = new Serializer();
-        serializer.read("room1");
-        //GUI gui = new GUI();
+        //Serializer serializer = new Serializer();
+        //serializer.read("room1");
+        GUI gui = new GUI(game);
         game.play();
     }
 }

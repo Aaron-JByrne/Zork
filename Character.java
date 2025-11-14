@@ -17,7 +17,7 @@ public class Character {
         this.name = name;
         this.currentRoom = startingRoom;
         this.inventory = new Inventory("Inventory", items);
-        System.out.println(items);
+        //System.out.println(items);
     }
 
     public String getName() {
@@ -40,9 +40,11 @@ public class Character {
         Room nextRoom = currentRoom.getExit(direction);
         if (nextRoom != null) {
             currentRoom = nextRoom;
-            System.out.println("You moved to: " + currentRoom.getTitle());
+            //System.out.println("You moved to: " + currentRoom.getTitle());
+            Console.print("You moved to: " + currentRoom.getTitle());
         } else {
-            System.out.println("You can't go that way!");
+            //System.out.println("You can't go that way!");
+            Console.print("You can't go that way!");
         }
     }
 }

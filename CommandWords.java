@@ -24,9 +24,11 @@ public class CommandWords {
     }
 
     public void showAll() {
-        System.out.print("Valid commands are: ");
+        //System.out.print("Valid commands are: ");
+        Console.print("Valid commands are: ");
         for (String command : validCommands.keySet()) {
-            System.out.print(command + " ");
+            //System.out.print(command + " ");
+            Console.print(command + " ");
         }
         System.out.println();
     }

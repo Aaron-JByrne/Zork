@@ -19,7 +19,7 @@ public class Room implements Serializable {
         this.roomTitle = title;
         exits = new HashMap<>();
         this.inventory = defaultInventory;
-        System.out.println("Room created with inventory");
+        //System.out.println("Room created with inventory");
     }
 
 

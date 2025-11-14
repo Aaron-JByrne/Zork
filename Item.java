@@ -3,7 +3,7 @@ import java.io.Serializable;
 public class Item implements Serializable {
     private String description;
     private String name;
-    private String location;
+    //private String location;
     private int id;
     private boolean isVisible;
 
@@ -30,13 +30,13 @@ public class Item implements Serializable {
         this.name = name;
     }
 
-    public String getLocation() {
-        return location;
-    }
+//    public String getLocation() {
+//        return location;
+//    }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+//    public void setLocation(String location) {
+//        this.location = location;
+//    }
 
     public int getId() {
         return id;
