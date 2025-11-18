@@ -28,15 +28,15 @@ public class Inventory implements java.io.Serializable{
     }
 
     public void displayInventory(){
-        if (items.isEmpty()) {
+        if (this.items.isEmpty()) {
             //System.out.println("No items");
             Console.print("No items");
         } else {
             //System.out.printf("Items in %s:\n", this.name);
-            Console.print("Items in " + this.name + ":\n");
+            Console.print("Items in " + this.name + ":");
             //Do I keep as lambda expression?
             //items.forEach(item -> System.out.println(item.getName()));
-            items.forEach(item -> Console.print(item.getName()));
+            this.items.forEach(item -> Console.print(item.getName()));
 
         }
     }
@@ -46,8 +46,9 @@ public class Inventory implements java.io.Serializable{
         destination.items.add(item);
     }
 
+
     public Item getItem(String name){
-        for(Item item : items){
+        for(Item item : this.items){
             if(item.getName().equals(name)){
                 return item;
             }
@@ -57,5 +58,9 @@ public class Inventory implements java.io.Serializable{
 
     public boolean hasItem(String name){
         return getItem(name) != null;
+    }
+
+    public ArrayList<Item> getItems(){
+        return this.items;
     }
 }

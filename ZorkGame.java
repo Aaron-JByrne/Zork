@@ -19,15 +19,17 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ZorkULGame {
+public class ZorkGame {
     private Parser parser;
-    private Parser guiParser;
+    //private Parser guiParser;
     private Character player;
+    private gameState state;
 
-    public ZorkULGame() {
+    public ZorkGame() {
         createRooms();
         parser = new Parser();
-        guiParser = new Parser();
+        //guiParser = new Parser();
+        state = gameState.exploration;
     }
 
     private void createRooms() {
@@ -40,9 +42,9 @@ public class ZorkULGame {
         Inventory outsideInventory = new Inventory("Outside", outsideItems);
 
         // create rooms
-        Outside = new Room("Outside");
-        Forest = new Room("Forest");
-        Hut = new Room("Hut");
+        Outside = new Room("Outside", "You are outside", outsideInventory);
+        Forest = new Room("Forest", "You are in the forest.");
+        Hut = new Room("Hut", "you are in a hut");
 
         new Minimap(Outside, Forest, Hut);
 
@@ -57,35 +59,38 @@ public class ZorkULGame {
         ArrayList<Item> playerInventory = new ArrayList<>();
         playerInventory.add(arrow);
         player = new Character("player", Outside, playerInventory);
+        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 50);
+        Ability firestarter = new Ability("firestarter", "sets opponent ablaze", 40);
+        player.addAbility(firestarter);
+        player.addAbility(takyon);
+
+        Item cd = new Item("CD", "A mysterious CD");
+        ArrayList<Item> enemyInventory = new ArrayList<>();
+        enemyInventory.add(cd);
+        Ability punch = new Ability("punch", "punch", 40);
+        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
+        enemy.addAbility(punch);
     }
-    /*
-    public void createRooms(){
-        Room[] rooms = new Room[27];
-        for (byte x=0,i=0;x<3;x++){
-            for (byte y=0;y<3;y++){
-                for (byte z=0;z<3;z++){
-                    rooms[i++] = new Room("room"+i,x,y,z);
-                }
-            }
-        }
-        new Minimap(rooms);
-
-
-        Item torch = new Item("torch", "a torch");
-        ArrayList<Item> playerInventory = new ArrayList<>();
-        playerInventory.add(torch);
-        player = new Character("player", rooms[0], playerInventory);
-
-    }*/
 
     public void play() {
         printWelcome();
 
         boolean finished = false;
         while (!finished) {
-            Command command = parser.getCommand();
-            finished = processCommand(command);
+            switch(state){
+                case exploration:
+                    Command command = parser.getCommand();
+                    finished = processCommand(command);
+                    break;
+                case fight:
+//                    player.displayAbilities();
+//                    int choice = parser.getAbility();
+//                    finished = processAbility(choice);
+//                    System.out.println(choice);
+                    break;
+            }
         }
+
         //System.out.println("Thank you for playing. Goodbye.");
         Console.print("Thank you for playing. Goodbye.");
     }
@@ -174,6 +179,14 @@ public class ZorkULGame {
                 Serializer serializer = new Serializer();
                 serializer.write(player.getCurrentRoom());
                 break;
+            case "fight":
+                if (command.hasSecondWord() && player.getCurrentRoom().hasCharacter(command.getSecondWord())) {
+                    Character target = player.getCurrentRoom().getCharacter(command.getSecondWord());
+                    Battle battle = new Battle(player, target);
+                } else{
+                    Console.print("fight who?");
+                }
+                break;
             default:
                 System.out.println("I don't know what you mean...");
                 break;
@@ -205,15 +218,16 @@ public class ZorkULGame {
             Console.print("There is no door!");
         } else {
             player.setCurrentRoom(nextRoom);
-            System.out.println(player.getCurrentRoom().getTitle());
+            nextRoom.describe();
+            //System.out.println(player.getCurrentRoom().getTitle());
         }
     }
 
     public static void main(String[] args) {
-        ZorkULGame game = new ZorkULGame();
+        ZorkGame game = new ZorkGame();
         //Serializer serializer = new Serializer();
         //serializer.read("room1");
-        GUI gui = new GUI(game);
+        //GUI gui = new GUI(game);
         game.play();
     }
 }

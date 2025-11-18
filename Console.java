@@ -8,4 +8,6 @@ public class Console{
         GUI.writeTo(message);
         System.out.println(message);
     }
+
+
 }

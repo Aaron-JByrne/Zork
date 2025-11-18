@@ -4,14 +4,14 @@ import java.awt.event.*;
 
 
 public class GUI {
-    ZorkULGame game;
+    ZorkGame game;
     JFrame frame = new JFrame("ZorkUL");
     JPanel panel = new JPanel();
-    JTextField textField = new JTextField("hello");
+    static JTextField textField = new JTextField();
 
     static JTextArea consoleDisplay = new JTextArea();
 
-    public GUI(ZorkULGame game) {
+    public GUI(ZorkGame game) {
         this.game = game;
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,10 +22,12 @@ public class GUI {
         frame.setSize(500, 500);
         frame.setVisible(true);
 
+        textField.setEditable(true);
         textField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Console.print("You pressed enter");
+                //textField.notify();
+                //Console.print("You pressed enter");
             }
         });
 
@@ -36,5 +38,8 @@ public class GUI {
             consoleDisplay.append(text + "\n");
         }
 
-
+        public static void getCommand(){
+            textField.setEditable(true);//chopped code figure out
+            Console.print("You pressed enter");
+        }
     }

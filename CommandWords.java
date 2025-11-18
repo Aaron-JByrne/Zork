@@ -17,6 +17,7 @@ public class CommandWords {
         validCommands.put("take", "take an item");
         validCommands.put("drop", "drop an item from your inventory");
         validCommands.put("save", "saves states of rooms");
+        validCommands.put("fight", "starts a fight with selected character");
     }
 
     public boolean isCommand(String commandWord) {

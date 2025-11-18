@@ -11,7 +11,10 @@ public class Parser {
 
     public Command getCommand() {
         System.out.print("> ");
+        //Console.print("> ");
         String inputLine = reader.nextLine();
+
+        //GUI.getCommand();
 
         String word1 = null;
         String word2 = null;
@@ -34,4 +37,5 @@ public class Parser {
     public void showCommands() {
         commands.showAll();
     }
+
 }
