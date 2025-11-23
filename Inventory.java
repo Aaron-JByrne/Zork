@@ -1,10 +1,11 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Inventory implements java.io.Serializable{
-    static ArrayList<Inventory> inventories = new ArrayList<>();
+    static List<Inventory> inventories = new ArrayList<>();
 
     private String name;
-    private ArrayList<Item> items;
+    private List<Item> items;
 
     public Inventory(String name){
         this.name = name;
@@ -12,7 +13,7 @@ public class Inventory implements java.io.Serializable{
         Inventory.inventories.add(this);
     }
 
-    public Inventory(String name, ArrayList<Item> defaultInventory){
+    public Inventory(String name, List<Item> defaultInventory){
         this.name = name;
         this.items = defaultInventory;
         Inventory.inventories.add(this);
@@ -60,7 +61,7 @@ public class Inventory implements java.io.Serializable{
         return getItem(name) != null;
     }
 
-    public ArrayList<Item> getItems(){
+    public List<Item> getItems(){
         return this.items;
     }
 }

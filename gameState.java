@@ -1,4 +1,4 @@
-public enum gameState {
-    exploration,
-    fight
+public enum GameState {
+    EXPLORATION,
+    FIGHT
 }

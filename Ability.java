@@ -13,6 +13,10 @@ public class Ability {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public int getDamage(){
         return damage;
     }

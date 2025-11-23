@@ -17,24 +17,30 @@ emphasising exploration and simple command-driven gameplay
 import java.sql.Array;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ZorkGame {
     private Parser parser;
-    //private Parser guiParser;
     private Character player;
-    private gameState state;
+    private GameController controller;
+    private GameState state;
+    private Battle currentBattle;
 
-    public ZorkGame() {
+    public ZorkGame(GameController controller) {
+        this.state = GameState.EXPLORATION;
+        this.controller = controller;
+        controller.setModel(this);
+
         createRooms();
         parser = new Parser();
         //guiParser = new Parser();
-        state = gameState.exploration;
     }
+
+
 
     private void createRooms() {
         Room Outside, Forest, Hut;
-        //Room room1, room2, room3, room4, room5, room6;
 
         ArrayList<Item> outsideItems = new ArrayList<>();
         Item testitem = new Item("testItem", "this is a test item");
@@ -56,17 +62,20 @@ public class ZorkGame {
 
         // create the player character and start outside
         Item arrow = new Item("Arrow", "A mysterious arrow");
-        ArrayList<Item> playerInventory = new ArrayList<>();
+        List<Item> playerInventory = new ArrayList<>();
         playerInventory.add(arrow);
         player = new Character("player", Outside, playerInventory);
         Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 50);
         Ability firestarter = new Ability("firestarter", "sets opponent ablaze", 40);
         player.addAbility(firestarter);
         player.addAbility(takyon);
+        player.setActiveAbilities(new Ability[]{firestarter, takyon, takyon, firestarter});
 
-        Item cd = new Item("CD", "A mysterious CD");
+        Ability tabulaRasa = new Ability("tabulaRasa", "", 40);
+        //Item cd = new Item("CD", "A mysterious CD");
+        Item tabulaRasaCD = new CD(tabulaRasa);
         ArrayList<Item> enemyInventory = new ArrayList<>();
-        enemyInventory.add(cd);
+        enemyInventory.add(tabulaRasaCD);
         Ability punch = new Ability("punch", "punch", 40);
         Character enemy = new Character("enemy", Forest, enemyInventory, 1);
         enemy.addAbility(punch);
@@ -75,24 +84,14 @@ public class ZorkGame {
     public void play() {
         printWelcome();
 
-        boolean finished = false;
-        while (!finished) {
-            switch(state){
-                case exploration:
-                    Command command = parser.getCommand();
-                    finished = processCommand(command);
-                    break;
-                case fight:
-//                    player.displayAbilities();
-//                    int choice = parser.getAbility();
-//                    finished = processAbility(choice);
-//                    System.out.println(choice);
-                    break;
-            }
-        }
+//        boolean finished = false;
+//        while (!finished) {
+//            Command command = parser.getCommand();
+//            finished = processCommand(command);
+//        }
 
         //System.out.println("Thank you for playing. Goodbye.");
-        Console.print("Thank you for playing. Goodbye.");
+        //Console.print("Thank you for playing. Goodbye.");
     }
 
     private void printWelcome() {
@@ -102,18 +101,21 @@ public class ZorkGame {
 //        System.out.println();
 //        System.out.println(player.getCurrentRoom().getTitle());
 
-        Console.print("Welcome to the University adventure!");
+        Console.print("Welcome to the adventure!");
         Console.print("Type 'help' if you need help.");
-        Console.print(player.getCurrentRoom().getTitle());
+        player.getCurrentRoom().describe();
     }
 
-    private boolean processCommand(Command command) {
+    public GameState getState(){
+        return this.state;
+    }
+
+    public GameState processCommand(Command command) {
         String commandWord = command.getCommandWord();
 
         if (commandWord == null) {
             //System.out.println("I don't understand your command...");
             Console.print("I don't understand your command...");
-            return false;
         }
 
         switch (commandWord) {
@@ -124,13 +126,7 @@ public class ZorkGame {
                 goRoom(command);
                 break;
             case "quit":
-                if (command.hasSecondWord()) {
-                    //System.out.println("Quit what?");
-                    Console.print("Quit what?");
-                    return false;
-                } else {
-                    return true; // signal to quit
-                }
+                Console.print("quit??");
             case "tp":
                 //System.out.printf("Teleporting to %s\n", command.getSecondWord());
                 Console.print("Teleporting to " + command.getSecondWord());
@@ -182,7 +178,9 @@ public class ZorkGame {
             case "fight":
                 if (command.hasSecondWord() && player.getCurrentRoom().hasCharacter(command.getSecondWord())) {
                     Character target = player.getCurrentRoom().getCharacter(command.getSecondWord());
+                    this.state = GameState.FIGHT;
                     Battle battle = new Battle(player, target);
+                    this.setBattle(battle);
                 } else{
                     Console.print("fight who?");
                 }
@@ -191,7 +189,19 @@ public class ZorkGame {
                 System.out.println("I don't know what you mean...");
                 break;
         }
-        return false;
+        return this.state;
+    }
+
+    public Battle getBattle(){
+        if (this.state == GameState.FIGHT) {
+            return this.currentBattle;
+        }else {
+            return null;
+        }
+    }
+
+    public void setBattle(Battle battle){
+        this.currentBattle = battle;
     }
 
     private void printHelp() {
@@ -223,11 +233,18 @@ public class ZorkGame {
         }
     }
 
+    public Character getPlayer(){
+        return player;
+    }
+
     public static void main(String[] args) {
-        ZorkGame game = new ZorkGame();
+        GameController gameController = new GameController();
+        ZorkGame game = new ZorkGame(gameController);
+        GUI gui = new GUI(gameController);
+        game.play();
+
+
         //Serializer serializer = new Serializer();
         //serializer.read("room1");
-        //GUI gui = new GUI(game);
-        game.play();
     }
 }

@@ -9,17 +9,11 @@ public class Parser {
         reader = new Scanner(System.in);
     }
 
-    public Command getCommand() {
-        System.out.print("> ");
-        //Console.print("> ");
-        String inputLine = reader.nextLine();
-
-        //GUI.getCommand();
-
+    public Command getCommand(String input) {
         String word1 = null;
         String word2 = null;
 
-        Scanner tokenizer = new Scanner(inputLine);
+        Scanner tokenizer = new Scanner(input);
         if (tokenizer.hasNext()) {
             word1 = tokenizer.next();
             if (tokenizer.hasNext()) {

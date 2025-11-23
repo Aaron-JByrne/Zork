@@ -1,4 +1,4 @@
-import java.util.Scanner;
+
 
 public class Battle {
     private Character user;
@@ -7,57 +7,63 @@ public class Battle {
     private boolean isOver;
 
 
-
     public Battle(Character user, Character npc) {
         this.user = user;
         this.npc = npc;
         this.isOver = false;
         userPriority = (user.getLevel() >= npc.getLevel());
         System.out.println(userPriority);
-        this.start();
     }
 
-    public void start() {
-        while (!isOver) {
-            user.displayStatus();
-            npc.displayStatus();
-            user.displayAbilities();
-            Ability currentability = selectAbility();
-            if (userPriority) {
-                user.useAbility(currentability, npc);
-                if(hasLost(npc)){
-                    isOver = true;
-                    System.out.println("You win A");
-                    break;
-                }
-                npc.useAbility(npc.getAbility(0), user);
-                if(hasLost(user)){
-                    isOver = true;
-                    System.out.println("You lose A");
-                    break;
-                }
-            } else{
-                npc.useAbility(npc.getAbility(0), user);
-                if(hasLost(user)){
-                    isOver = true;
-                    System.out.println("You lose B");
-                    break;
-                }
-                user.useAbility(currentability, npc);
-                if(hasLost(npc)){
-                    isOver = true;
-                    System.out.println("You win B");
-                    break;
-                }
+    public void end(){
+
+    }
+
+    public Ability getNPCAbility(){
+        return npc.getAbility(0);
+    }
+
+    public void performTurn(String abilityName){
+        Ability selectedAbility = getAbilityByName(abilityName);
+        Ability npcAbility = getNPCAbility();
+
+        if (userPriority) {
+            user.useAbility(selectedAbility, npc);
+            if(hasLost(npc)){
+                isOver = true;
+                Console.print("BATTLE OVER");
+                return;
+            }
+            npc.useAbility(npcAbility, user);
+            if(hasLost(user)){
+                isOver = true;
+                Console.print("BATTLE OVER");
+                return;
             }
         }
-
+        else{
+            npc.useAbility(selectedAbility, user);
+            if(hasLost(user)){
+                isOver = true;
+                Console.print("BATTLE OVER");
+                return;
+            }
+            user.useAbility(npcAbility, npc);
+            if(hasLost(npc)){
+                isOver = true;
+                Console.print("BATTLE OVER");
+                return;
+            }
+        }
     }
 
-    public Ability selectAbility() {
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt() - 1;
-        return user.getAbility(choice);
+    public Ability getAbilityByName(String abilityName){
+        for(Ability ability : user.getAbilities()){
+            if(ability.getName().equals(abilityName)){
+                return ability;
+            }
+        }
+        return null;
     }
 
     public boolean hasLost(Character player){
@@ -67,10 +73,8 @@ public class Battle {
         }else{
             return false;
         }
-
-    }
-
-    public void finish(){
-
     }
 }
+
+
+
