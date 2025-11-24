@@ -84,6 +84,10 @@ public class GUI {
             panel.add(attack3);
             panel.add(attack4);
         }
+        if (this.state == GameState.EXPLORATION){
+            frame.remove(panel); //panel is removed from the frame and the heirarchy
+            frame.revalidate(); //revalidates the heirarchy
+        }
     }
 
     public void setAbilityButtons(String[] abilityNames){

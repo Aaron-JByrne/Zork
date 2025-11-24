@@ -14,11 +14,8 @@ emphasising exploration and simple command-driven gameplay
 */
 
 
-import java.sql.Array;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ZorkGame {
     private Parser parser;
@@ -26,18 +23,21 @@ public class ZorkGame {
     private GameController controller;
     private GameState state;
     private Battle currentBattle;
+    private static ZorkGame instance = null;
 
     public ZorkGame(GameController controller) {
         this.state = GameState.EXPLORATION;
         this.controller = controller;
         controller.setModel(this);
-
+        instance = this;
         createRooms();
         parser = new Parser();
         //guiParser = new Parser();
     }
 
-
+    public static ZorkGame getInstance(){
+        return instance;
+    }
 
     private void createRooms() {
         Room Outside, Forest, Hut;
@@ -181,6 +181,7 @@ public class ZorkGame {
                     this.state = GameState.FIGHT;
                     Battle battle = new Battle(player, target);
                     this.setBattle(battle);
+
                 } else{
                     Console.print("fight who?");
                 }
@@ -210,6 +211,11 @@ public class ZorkGame {
         Console.print("You are lost. You are alone. You wander around the university.");
         Console.print("Your command words are: ");
         parser.showCommands();
+    }
+
+    public void onBattleEnd(){
+        this.state = GameState.EXPLORATION;
+        controller.updateState(this.state);
     }
 
     private void goRoom(Command command) {

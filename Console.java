@@ -6,7 +6,7 @@ public class Console{
 
     public static void print(String message){
         GUI.writeTo(message);
-        System.out.println(message);
+        //System.out.println(message);
     }
 
 

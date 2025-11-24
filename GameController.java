@@ -21,7 +21,7 @@ public class GameController{
         updateState(state);
     }
 
-    public void onAbilityClick(String abilityName){
+    public void onAbilityClick(String abilityName) {
         if (model.getState() == GameState.FIGHT) {
             Battle activeBattle = model.getBattle();
             activeBattle.performTurn(abilityName);
@@ -32,7 +32,7 @@ public class GameController{
         view.updateState(gameState);
         if (gameState==GameState.FIGHT){
             String[] abilityNames = new String[4];
-            int i=0;
+            int i = 0;
             for(Ability ability : model.getPlayer().getActiveAbilities()){
                 abilityNames[i++] = ability.getName();
             }

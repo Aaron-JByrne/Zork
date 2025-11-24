@@ -15,47 +15,77 @@ public class Battle {
         System.out.println(userPriority);
     }
 
-    public void end(){
-
+    public boolean isFinished(){
+        return isOver;
     }
 
     public Ability getNPCAbility(){
         return npc.getAbility(0);
     }
 
-    public void performTurn(String abilityName){
+    public boolean performTurn(String abilityName){
         Ability selectedAbility = getAbilityByName(abilityName);
         Ability npcAbility = getNPCAbility();
 
         if (userPriority) {
             user.useAbility(selectedAbility, npc);
             if(hasLost(npc)){
-                isOver = true;
                 Console.print("BATTLE OVER");
-                return;
+                return true;
             }
             npc.useAbility(npcAbility, user);
             if(hasLost(user)){
-                isOver = true;
                 Console.print("BATTLE OVER");
-                return;
+                return true;
             }
         }
         else{
             npc.useAbility(selectedAbility, user);
             if(hasLost(user)){
-                isOver = true;
                 Console.print("BATTLE OVER");
-                return;
+                return true;
             }
             user.useAbility(npcAbility, npc);
             if(hasLost(npc)){
-                isOver = true;
                 Console.print("BATTLE OVER");
-                return;
+                return true;
             }
         }
+        return false;
     }
+
+//    public boolean performtestturn(String abilityName){
+//        Ability selectedAbility = getAbilityByName(abilityName);
+//        Ability npcAbility = getNPCAbility();
+//
+//        if (userPriority) {
+//            user.useAbility(selectedAbility, npc);
+//            if(hasLost(npc)){
+//                Console.print("BATTLE OVER");
+//                return true;
+//            }
+//            npc.useAbility(npcAbility, user);
+//            if(hasLost(user)){
+//                Console.print("BATTLE OVER");
+//                return true;
+//            }
+//        }
+//        else{
+//            npc.useAbility(selectedAbility, user);
+//            if(hasLost(user)){
+//                Console.print("BATTLE OVER");
+//                return true;
+//            }
+//            user.useAbility(npcAbility, npc);
+//            if(hasLost(npc)){
+//                Console.print("BATTLE OVER");
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+
 
     public Ability getAbilityByName(String abilityName){
         for(Ability ability : user.getAbilities()){
@@ -66,9 +96,12 @@ public class Battle {
         return null;
     }
 
+
     public boolean hasLost(Character player){
         if(player.getHealth() <= 0){
             player.getCurrentRoom().removeCharacter(player);
+            isOver = true;
+            ZorkGame.getInstance().onBattleEnd();
             return true;
         }else{
             return false;
