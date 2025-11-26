@@ -8,6 +8,8 @@ public class Minimap {
         }
     }
 
-
+    public static double getTargetDirection(Room source, Room target){
+        return Math.atan((double) (source.getY() - target.getY()) / (source.getX() - target.getX()));
+    }
 }
 

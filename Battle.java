@@ -3,15 +3,22 @@
 public class Battle {
     private Character user;
     private Character npc;
+    private BattleCharacter player1;
+    private BattleCharacter player2;
     private boolean userPriority; //trash variable name
     private boolean isOver;
+    private BattleCharacter loser;
+    private BattleCharacter winner;
 
 
     public Battle(Character user, Character npc) {
+        userPriority = (user.getLevel() >= npc.getLevel());
+        this.player1 = (userPriority) ? new BattleCharacter(user) : new BattleCharacter(npc);
+        this.player2 = (userPriority) ? new BattleCharacter(npc) : new BattleCharacter(user);
         this.user = user;
         this.npc = npc;
         this.isOver = false;
-        userPriority = (user.getLevel() >= npc.getLevel());
+        validateMoveSets();
     }
 
     public boolean isFinished(){
@@ -19,39 +26,41 @@ public class Battle {
     }
 
     public Ability getNPCAbility(){
-        return npc.getAbility(0);
+        return npc.getActiveAbilities()[0];
     }
 
     public void performTurn(String abilityName){
-        Ability selectedAbility = getAbilityByName(abilityName);
-        Ability npcAbility = getNPCAbility();
+        System.out.println("\\\\\\\\\\\\\\\\\\\\\\TURN BEGAN////////////////////");
 
-        if (userPriority) {
-            user.useAbility(selectedAbility, npc);
-            if(hasLost(npc)){
-                Console.print("BATTLE OVER");
+        try {
+            Ability player1Ability = (userPriority) ? getAbilityByName(abilityName) : getNPCAbility();
+            Ability player2Ability = (userPriority) ? getNPCAbility() : getAbilityByName(abilityName);
+
+            player1.useAbility(player1Ability, player2);
+            if(hasLost(player2)){
                 return;
             }
-            npc.useAbility(npcAbility, user);
-            if(hasLost(user)){
-                Console.print("BATTLE OVER");
+            player2.useAbility(player2Ability, player1);
+            if(hasLost(player1)){
                 return;
             }
-        }
-        else{
-            npc.useAbility(selectedAbility, user);
-            if(hasLost(user)){
-                Console.print("BATTLE OVER");
-                return;
-            }
-            user.useAbility(npcAbility, npc);
-            if(hasLost(npc)){
-                Console.print("BATTLE OVER");
-                return;
-            }
+        } finally {
+            finishTurn();
         }
     }
 
+    public void finishTurn(){
+        validateMoveSets();
+    }
+
+    public void validateMoveSets(){
+        if(!player1.canAttack()) {
+            end(player1);
+        }
+        if(!player2.canAttack()){
+            end(player2);
+        }
+    }
 //    public boolean performtestturn(String abilityName){
 //        Ability selectedAbility = getAbilityByName(abilityName);
 //        Ability npcAbility = getNPCAbility();
@@ -86,24 +95,31 @@ public class Battle {
 
 
     public Ability getAbilityByName(String abilityName){
-        for(Ability ability : user.getAbilities()){
+        for(Ability ability : user.getActiveAbilities()){
             if(ability.getName().equals(abilityName)){
-                return ability;
+                if(ability.getUses() > 0){
+                    return ability;
+                }
             }
         }
         return null;
     }
 
 
-    public boolean hasLost(Character player){
-        if(player.getHealth() <= 0){
-            player.getCurrentRoom().removeCharacter(player);
-            isOver = true;
-            ZorkGame.getInstance().onBattleEnd();
+    public boolean hasLost(BattleCharacter battleChar){
+        if(battleChar.getCharacter().getHealth() <= 0){
+            end(battleChar);
             return true;
         }else{
             return false;
         }
+    }
+
+    public void end(BattleCharacter loser){
+        this.winner = (loser == player2) ? player1 : player2;
+        System.out.printf("winner - %s\nloser - %s\n",winner.getCharacter().getName(), loser.getCharacter().getName());
+        isOver = true;
+        ZorkGame.getInstance().onBattleEnd();
     }
 }
 

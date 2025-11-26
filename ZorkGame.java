@@ -49,7 +49,7 @@ public class ZorkGame {
         // create rooms
         Outside = new Room("Outside", "You are outside", 0, 0);
         Forest = new Room("Forest", "You are in the forest.", 0, -1);
-        forestClearing = new Room("Forest", "you enter a clearing in the forest", 1, -1, firestarterDisc);
+        forestClearing = new Room("Clearing", "you enter a clearing in the forest", 1, -1, firestarterDisc);
 
         new Minimap(Outside, Forest, forestClearing);
 
@@ -65,7 +65,7 @@ public class ZorkGame {
         List<Item> playerInventory = new ArrayList<>();
         playerInventory.add(arrow);
         player = new Player("player", Outside, playerInventory);
-        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 50, 1);
+        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 5, 10);
         player.addAbility(takyon);
         player.setActiveAbilities(new Ability[]{takyon, null, null, null});
 
@@ -74,9 +74,12 @@ public class ZorkGame {
         Item tabulaRasaCD = new Disc(tabulaRasa);
         ArrayList<Item> enemyInventory = new ArrayList<>();
         enemyInventory.add(tabulaRasaCD);
-        Ability punch = new Ability("punch", "punch", 40, 3);
-        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
-        enemy.addAbility(punch);
+
+//        Ability punch = new Ability("punch", "punch", 45, 2);
+//        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
+//        enemy.setActiveAbilities(new Ability[]{punch, null, null, null});
+//        enemy.addAbility(punch);
+
     }
 
     public void play() {

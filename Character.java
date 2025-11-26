@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Character {
@@ -60,28 +61,15 @@ public class Character {
         int i=0;
         for(Ability ability : selectedAbilities){
             if(ability != null){
+//                System.out.printf("%s has %d uses left\n",ability.getName(),ability.getUses());
                 uses[i++] = ability.getUses();
             }
             else{
                 uses[i++] = 0;
             }
         }
+//        System.out.println(Arrays.toString(uses));
         return uses;
-    }
-
-    public boolean[] AbilityUsable(){
-        boolean[] usable = new boolean[4];
-        int i = 0;
-        for(int num : getUses()){
-            if(num>0){
-                usable[i++] = true;
-            }
-        }
-        return usable;
-    }
-
-    public boolean canAttack(){
-        return AbilityUsable()[0] && AbilityUsable()[1] && AbilityUsable()[2] && AbilityUsable()[3];
     }
 
 //    public void move(String direction) {
@@ -123,23 +111,20 @@ public class Character {
         Console.print(String.format("%s : %d HP", name, health));
     }
 
-    public Ability getAbility(int index){
-        return abilities.get(index);
-    }
 
-    public void useAbility(Ability ability, Character target){
-        Console.print(String.format("%s uses %s",this.name, ability.getName()));
-        ability.use();
-        target.recieveAttack(ability);
-    }
 
-    public void recieveAttack(Ability ability){
-        Console.print(String.format("%s recieves %d dmg", this.name, ability.getDamage()));
-        this.health -= ability.getDamage();
-    }
+//    public void useAbility(Ability ability, Character target){
+//        Console.print(String.format("%s uses %s",this.name, ability.getName()));
+//        ability.use();
+//        target.recieveAttack(ability);
+//    }
 
     public int getHealth(){
         return health;
+    }
+
+    public void changeHealth(int amount){
+        health += amount;
     }
 
     public int getLevel(){

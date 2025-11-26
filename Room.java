@@ -41,6 +41,13 @@ public class Room implements Serializable {
         }
     }
 
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+
     public void displayInventory(){
         inventory.displayInventory();
     }

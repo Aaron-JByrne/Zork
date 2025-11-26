@@ -62,8 +62,8 @@ public class GameController{
             int i = 0;
             for(int count : model.getPlayer().getUses()){
                 usableAbilites[i++] = count > 0;
-                System.out.println(usableAbilites[i-1]);
-                System.out.println(i);
+//                System.out.println(usableAbilites[i-1]);
+//                System.out.println(i);
             }
             view.updateAbilityButtons(usableAbilites);
         }
