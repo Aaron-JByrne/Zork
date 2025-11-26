@@ -1,11 +1,9 @@
 import java.io.Serializable;
 
-public class Item implements Serializable {
-    private String description;
-    private String name;
-    //private String location;
-    private int id;
-    private boolean isVisible;
+abstract public class Item implements Serializable {
+    protected String description;
+    protected String name;
+    protected boolean isVisible;
 
 
     public Item(String name, String description) {
@@ -14,43 +12,14 @@ public class Item implements Serializable {
         this.isVisible = true;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    abstract public String getDescription();
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    abstract public void setDescription(String description);
 
-    public String getName() {
-        return name;
-    }
+    abstract public String getName();
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    abstract public void setName(String name);
 
-//    public String getLocation() {
-//        return location;
-//    }
+    abstract public void use();
 
-//    public void setLocation(String location) {
-//        this.location = location;
-//    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public boolean isVisible() {
-        return isVisible;
-    }
-
-    public void setVisible(boolean visible) {
-        isVisible = visible;
-    }
 }

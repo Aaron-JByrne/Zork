@@ -1,28 +1,36 @@
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
 public class Room implements Serializable {
     private String roomTitle;
-    private Map<String, Room> exits;// Map direction to neighboring Room
+    private Map<Dir, Room> exits;// Map direction to neighboring Room
     private Inventory inventory;
     private ArrayList<Character> characters = new ArrayList<>();
     private String description;
+    private int x;
+    private int y;
 
-    public Room(String title, String description) {
+    public Room(String title, String description, int x, int y){
         this.roomTitle = title;
         exits = new HashMap<>();
         this.description = description;
         this.inventory = new Inventory(this.roomTitle);
+        this.x = x;
+        this.y = y;
     }
 
-    public Room(String title, String description, Inventory defaultInventory) {
+    public Room(String title, String description, int x, int y, Item... item ){
         this.roomTitle = title;
         exits = new HashMap<>();
         this.description = description;
-        this.inventory = defaultInventory;
-        //System.out.println("Room created with inventory");
+        List<Item> defaultInventory = new ArrayList<>();
+        for(Item i : item){
+            defaultInventory.add(i);
+        }
+        this.inventory = new Inventory(this.roomTitle, defaultInventory);
     }
 
     public void describe(){
@@ -67,18 +75,17 @@ public class Room implements Serializable {
         return roomTitle;
     }
 
-    public void setExit(String direction, Room neighbor) {
+    public void setExit(Dir direction, Room neighbor) {
         exits.put(direction, neighbor);
     }
 
-
-    public Room getExit(String direction) {
+    public Room getExit(Dir direction) {
         return exits.get(direction);
     }
 
     public String getExitString() {
         StringBuilder sb = new StringBuilder();
-        for (String direction : exits.keySet()) {
+        for (Dir direction : exits.keySet()) {
             sb.append(direction).append(" ");
         }
         return sb.toString().trim();

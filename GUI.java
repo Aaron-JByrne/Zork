@@ -9,7 +9,11 @@ public class GUI {
     JFrame frame = new JFrame("ZorkUL");
 
     JPanel panel = new JPanel();
-    JLabel label = new JLabel();
+    JPanel innerPanel = new JPanel();
+
+    JPanel statPanel = new JPanel();
+    JLabel hpLabel = new JLabel();
+    JLabel roomLabel = new JLabel();
 
 
     JButton attack1 = new JButton("attack 1");
@@ -39,13 +43,14 @@ public class GUI {
         frame.add(scrollPane, BorderLayout.CENTER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
+        frame.add(statPanel, BorderLayout.NORTH);
+        statPanel.setLayout(new FlowLayout());
 
 
-        frame.add(label, BorderLayout.NORTH);
         //frame.add(panel, BorderLayout.EAST);
-        panel.setLayout(new GridLayout(2, 2));
-        label.setText("");
-
+        innerPanel.setLayout(new GridLayout(2, 2));
+        statPanel.add(hpLabel);
+        statPanel.add(roomLabel);
 
         attack1.addActionListener(new abilityListener());
         attack2.addActionListener(new abilityListener());
@@ -74,15 +79,15 @@ public class GUI {
         consoleDisplay.setCaretPosition(consoleDisplay.getDocument().getLength());
     }
 
-
     public void updateState(GameState state){
         this.state = state;
         if(this.state == GameState.FIGHT){
             frame.add(panel, BorderLayout.EAST);
-            panel.add(attack1);
-            panel.add(attack2);
-            panel.add(attack3);
-            panel.add(attack4);
+            panel.add(innerPanel,BorderLayout.SOUTH);
+            innerPanel.add(attack1);
+            innerPanel.add(attack2);
+            innerPanel.add(attack3);
+            innerPanel.add(attack4);
         }
         if (this.state == GameState.EXPLORATION){
             frame.remove(panel); //panel is removed from the frame and the heirarchy
@@ -96,11 +101,25 @@ public class GUI {
         }
     }
 
+    public void updateAbilityButtons(boolean[] abilityBooleanToggles){
+        for(int i=0;i<abilityBooleanToggles.length;i++){
+            abilityButtons[i].setEnabled(abilityBooleanToggles[i]);
+        }
+    }
+
     class abilityListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
             JButton source = (JButton)e.getSource();
             controller.onAbilityClick(source.getText());
         }
+    }
+
+    public void updateHP(int hp){
+        hpLabel.setText("HP: " + hp);
+    }
+
+    public void updateRoom(String roomName){
+        roomLabel.setText("\uD83D\uDCCD"+roomName);
     }
 }

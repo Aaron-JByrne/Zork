@@ -12,7 +12,6 @@ public class Battle {
         this.npc = npc;
         this.isOver = false;
         userPriority = (user.getLevel() >= npc.getLevel());
-        System.out.println(userPriority);
     }
 
     public boolean isFinished(){
@@ -23,7 +22,7 @@ public class Battle {
         return npc.getAbility(0);
     }
 
-    public boolean performTurn(String abilityName){
+    public void performTurn(String abilityName){
         Ability selectedAbility = getAbilityByName(abilityName);
         Ability npcAbility = getNPCAbility();
 
@@ -31,27 +30,26 @@ public class Battle {
             user.useAbility(selectedAbility, npc);
             if(hasLost(npc)){
                 Console.print("BATTLE OVER");
-                return true;
+                return;
             }
             npc.useAbility(npcAbility, user);
             if(hasLost(user)){
                 Console.print("BATTLE OVER");
-                return true;
+                return;
             }
         }
         else{
             npc.useAbility(selectedAbility, user);
             if(hasLost(user)){
                 Console.print("BATTLE OVER");
-                return true;
+                return;
             }
             user.useAbility(npcAbility, npc);
             if(hasLost(npc)){
                 Console.print("BATTLE OVER");
-                return true;
+                return;
             }
         }
-        return false;
     }
 
 //    public boolean performtestturn(String abilityName){

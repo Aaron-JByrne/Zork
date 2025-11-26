@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ZorkGame {
     private Parser parser;
-    private Character player;
+    private Player player;
     private GameController controller;
     private GameState state;
     private Battle currentBattle;
@@ -40,43 +40,41 @@ public class ZorkGame {
     }
 
     private void createRooms() {
-        Room Outside, Forest, Hut;
+        Room Outside, Forest, forestClearing;
 
-        ArrayList<Item> outsideItems = new ArrayList<>();
-        Item testitem = new Item("testItem", "this is a test item");
-        outsideItems.add(testitem);
-        Inventory outsideInventory = new Inventory("Outside", outsideItems);
+        Ability firestarter = new Ability("firestarter", "sets opponent ablaze", 40, 4);
+        Disc firestarterDisc = new Disc(firestarter);
+
 
         // create rooms
-        Outside = new Room("Outside", "You are outside", outsideInventory);
-        Forest = new Room("Forest", "You are in the forest.");
-        Hut = new Room("Hut", "you are in a hut");
+        Outside = new Room("Outside", "You are outside", 0, 0);
+        Forest = new Room("Forest", "You are in the forest.", 0, -1);
+        forestClearing = new Room("Forest", "you enter a clearing in the forest", 1, -1, firestarterDisc);
 
-        new Minimap(Outside, Forest, Hut);
+        new Minimap(Outside, Forest, forestClearing);
 
         // initialise room exits
-        Outside.setExit("south", Forest);
-        Forest.setExit("north", Outside);
-        Forest.setExit("east", Hut);
-        Hut.setExit("west", Forest);
+        Outside.setExit(Dir.SOUTH, Forest);
+        Forest.setExit(Dir.NORTH, Outside);
+        Forest.setExit(Dir.EAST, forestClearing);
+        forestClearing.setExit(Dir.WEST, Forest);
 
         // create the player character and start outside
-        Item arrow = new Item("Arrow", "A mysterious arrow");
+        Arrow arrow = new Arrow();
+        arrow.setTargetRoom(forestClearing);
         List<Item> playerInventory = new ArrayList<>();
         playerInventory.add(arrow);
-        player = new Character("player", Outside, playerInventory);
-        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 50);
-        Ability firestarter = new Ability("firestarter", "sets opponent ablaze", 40);
-        player.addAbility(firestarter);
+        player = new Player("player", Outside, playerInventory);
+        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 50, 1);
         player.addAbility(takyon);
-        player.setActiveAbilities(new Ability[]{firestarter, takyon, takyon, firestarter});
+        player.setActiveAbilities(new Ability[]{takyon, null, null, null});
 
-        Ability tabulaRasa = new Ability("tabulaRasa", "", 40);
+        Ability tabulaRasa = new Ability("tabulaRasa", "blank slate", 40, 4);
         //Item cd = new Item("CD", "A mysterious CD");
-        Item tabulaRasaCD = new CD(tabulaRasa);
+        Item tabulaRasaCD = new Disc(tabulaRasa);
         ArrayList<Item> enemyInventory = new ArrayList<>();
         enemyInventory.add(tabulaRasaCD);
-        Ability punch = new Ability("punch", "punch", 40);
+        Ability punch = new Ability("punch", "punch", 40, 3);
         Character enemy = new Character("enemy", Forest, enemyInventory, 1);
         enemy.addAbility(punch);
     }
@@ -101,7 +99,7 @@ public class ZorkGame {
 //        System.out.println();
 //        System.out.println(player.getCurrentRoom().getTitle());
 
-        Console.print("Welcome to the adventure!");
+        Console.print("You were struck with an arrow, the arrow glows mysteriously,\n    as you remove the arrow you feel a strange power and the arrow seems to point south");
         Console.print("Type 'help' if you need help.");
         player.getCurrentRoom().describe();
     }
@@ -225,13 +223,15 @@ public class ZorkGame {
             return;
         }
 
-        String direction = command.getSecondWord();
+        String directionString = command.getSecondWord();
+
+        Dir direction = Dir.valueOf(directionString.toUpperCase());
 
         Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             //System.out.println("There is no door!");
-            Console.print("There is no door!");
+            Console.print("There doesnt seem to be a way to go that direction.");
         } else {
             player.setCurrentRoom(nextRoom);
             nextRoom.describe();
@@ -239,7 +239,7 @@ public class ZorkGame {
         }
     }
 
-    public Character getPlayer(){
+    public Player getPlayer(){
         return player;
     }
 
