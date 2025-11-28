@@ -30,6 +30,8 @@ public class Room implements Serializable {
         for(Item i : item){
             defaultInventory.add(i);
         }
+        this.x = x;
+        this.y = y;
         this.inventory = new Inventory(this.roomTitle, defaultInventory);
     }
 

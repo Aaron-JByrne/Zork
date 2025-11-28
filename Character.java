@@ -6,10 +6,10 @@ public class Character {
     protected String name;
     protected Room currentRoom;
     protected Inventory inventory;
-    protected List<Ability> abilities = new ArrayList<>();
     protected Ability[] selectedAbilities = new Ability[4];
     protected int health;
     protected int level;
+    protected int xp;
 
     public Character(String name, Room startingRoom) {
         this.name = name;
@@ -62,7 +62,7 @@ public class Character {
         for(Ability ability : selectedAbilities){
             if(ability != null){
 //                System.out.printf("%s has %d uses left\n",ability.getName(),ability.getUses());
-                uses[i++] = ability.getUses();
+                uses[i++] = ability.getCurrentUses();
             }
             else{
                 uses[i++] = 0;
@@ -84,20 +84,20 @@ public class Character {
 //        }
 //    }
 
-    public void addAbility(Ability ability){
-        abilities.add(ability);
-    }
+//    public void addAbility(Ability ability){
+//        abilities.add(ability);
+//    }
 
-    public List<Ability> getAbilities(){
-        return abilities;
-    }
+//    public List<Ability> getAbilities(){
+//        return abilities;
+//    }
 
-    public void displayAbilities(){
-        int i=1;
-        for(Ability ability : abilities){
-            System.out.printf("%d. %s\n",i++,ability.getName());
-        }
-    }
+//    public void displayAbilities(){
+//        int i=1;
+//        for(Ability ability : abilities){
+//            System.out.printf("%d. %s\n",i++,ability.getName());
+//        }
+//    }
 
     public Ability[] getActiveAbilities(){
         return selectedAbilities;
@@ -127,7 +127,31 @@ public class Character {
         health += amount;
     }
 
+    public void setHealth(int health){
+        this.health = health;
+    }
+
     public int getLevel(){
         return level;
+    }
+
+    public int getXP(){
+        return xp;
+    }
+
+    public void addXP(int xp) {
+        this.xp += xp;
+        if (xp >= 100) {
+            levelUp();
+            this.xp -= 100;
+        }
+    }
+
+    public void levelUp(){
+        this.level++;
+    }
+
+    public void loseBattle(){
+        inventory.sendAllItems(currentRoom.getInventory());
     }
 }

@@ -9,7 +9,13 @@ public class Minimap {
     }
 
     public static double getTargetDirection(Room source, Room target){
-        return Math.atan((double) (source.getY() - target.getY()) / (source.getX() - target.getX()));
+        System.out.println(target.getX() + " " + target.getY());
+        int yDif = target.getY() - source.getY();
+        int xDif = target.getX() - source.getX();
+        double result = Math.atan((double) yDif / xDif);
+        Console.print( String.format("xdif - %d, ydif - %d", xDif, yDif));
+
+        return result;
     }
 }
 

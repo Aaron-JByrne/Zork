@@ -14,7 +14,6 @@ public class BattleCharacter {
         return character;
     }
 
-
     public boolean[] AbilityUsable(){
 //        System.out.println("AbilityUsable() being called");
         boolean[] usable = new boolean[4];

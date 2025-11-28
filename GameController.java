@@ -25,12 +25,21 @@ public class GameController{
         refreshUI();
     }
 
-    public void onAbilityClick(String abilityName) {
-        if (model.getState() == GameState.FIGHT) {
-            Battle activeBattle = model.getBattle();
-            activeBattle.performTurn(abilityName);
-        }
+//    public void onAbilityClick(String abilityName) {
+//        if (model.getState() == GameState.FIGHT) {
+//            Battle activeBattle = model.getBattle();
+//            activeBattle.performTurn(abilityName);
+//        }
+//
+//        refreshUI();
+//    }
 
+    public void onAbilityClick(int index){
+        if(model.getState() == GameState.FIGHT){
+            model.getBattle().performTurn(index);
+        } else if (model.getState() == GameState.EXPLORATION) {
+            model.getPlayer().setAbilityByIndex(index);
+        }
         refreshUI();
     }
 
@@ -57,6 +66,8 @@ public class GameController{
     public void refreshUI(){
         view.updateHP(model.getPlayer().getHealth());
         view.updateRoom(model.getPlayer().getCurrentRoom().getTitle());
+        view.updateLevel(model.getPlayer().getLevel());
+
         if(state == GameState.FIGHT){
             boolean[] usableAbilites = new boolean[4];
             int i = 0;
@@ -66,6 +77,27 @@ public class GameController{
 //                System.out.println(i);
             }
             view.updateAbilityButtons(usableAbilites);
+        }else if(state == GameState.EXPLORATION){
+            if(model.getArrow().hasTargetRoom()){
+                if(model.getArrow().isActivated()) {
+                    if(model.getArrow().hasReachedTarget()){
+                        model.getArrow().deactivate();
+                        model.getArrow().setTargetRoom(null);
+                        System.out.println("Arrow has reached target room");
+                    }else {
+                        view.updateArrow(model.getArrow().getAngle());
+                    }
+                }
+
+            }
         }
     }
+
+    public void selectAbilityIndexRequest(Ability ability){
+        view.showAbilityIndexSelector(ability.getName());
+    }
+
+//    public void updateSelectedAbilities(int index){
+//        model.getPlayer().setAbilityByIndex(index);
+//    }
 }

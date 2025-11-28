@@ -3,12 +3,14 @@ public class Ability {
     private String description;
     private int damage;
     private int uses;
+    private int initialUses;
 
     Ability(String name, String description, int damage, int uses){
         this.name = name;
         this.description = description;
         this.damage = damage;
         this.uses = uses;
+        this.initialUses = uses;
     }
 
     public String getName() {
@@ -23,10 +25,19 @@ public class Ability {
         return damage;
     }
 
-    public int getUses(){
+    public int getCurrentUses(){
         return uses;
     }
+
     public void use(){
         uses--;
+    }
+
+    public int getInitialUses(){
+        return initialUses;
+    }
+
+    public void resetUses(){
+        uses = initialUses;
     }
 }

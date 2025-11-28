@@ -47,6 +47,10 @@ public class Inventory implements java.io.Serializable{
         destination.items.add(item);
     }
 
+    public void sendAllItems(Inventory destination){
+        destination.items.addAll(this.items);
+        this.items.clear();
+    }
 
     public Item getItem(String name){
         for(Item item : this.items){

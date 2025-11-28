@@ -22,7 +22,8 @@ public class Disc extends Item{
         this.description = description;
     }
 
-    public void use(){
 
+    public void use(){
+        ZorkGame.getInstance().getPlayer().beginSelectAbilityIndex(this.ability);
     }
 }

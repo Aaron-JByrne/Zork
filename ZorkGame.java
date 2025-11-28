@@ -23,6 +23,8 @@ public class ZorkGame {
     private GameController controller;
     private GameState state;
     private Battle currentBattle;
+    private Arrow arrow;
+
     private static ZorkGame instance = null;
 
     public ZorkGame(GameController controller) {
@@ -35,8 +37,15 @@ public class ZorkGame {
         //guiParser = new Parser();
     }
 
+    public Arrow getArrow(){
+        return arrow;
+    }
+
     public static ZorkGame getInstance(){
         return instance;
+    }
+    public static GameController getController(){
+        return instance.controller;
     }
 
     private void createRooms() {
@@ -60,25 +69,27 @@ public class ZorkGame {
         forestClearing.setExit(Dir.WEST, Forest);
 
         // create the player character and start outside
-        Arrow arrow = new Arrow();
-        arrow.setTargetRoom(forestClearing);
+
+
         List<Item> playerInventory = new ArrayList<>();
-        playerInventory.add(arrow);
+
         player = new Player("player", Outside, playerInventory);
-        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 5, 10);
-        player.addAbility(takyon);
-        player.setActiveAbilities(new Ability[]{takyon, null, null, null});
+        player.setActiveAbilities(new Ability[]{null, null, null, null});
+
+        this.arrow = new Arrow();
+        arrow.setTargetRoom(forestClearing);
+        playerInventory.add(arrow);
 
         Ability tabulaRasa = new Ability("tabulaRasa", "blank slate", 40, 4);
-        //Item cd = new Item("CD", "A mysterious CD");
         Item tabulaRasaCD = new Disc(tabulaRasa);
         ArrayList<Item> enemyInventory = new ArrayList<>();
         enemyInventory.add(tabulaRasaCD);
 
-//        Ability punch = new Ability("punch", "punch", 45, 2);
-//        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
-//        enemy.setActiveAbilities(new Ability[]{punch, null, null, null});
-//        enemy.addAbility(punch);
+//        Ability punch = new Ability("punch", "punch", 15, 5);
+        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 5, 10);
+        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
+        enemy.setActiveAbilities(new Ability[]{takyon, null, null, null});
+//        enemy.addAbility(takyon);
 
     }
 
@@ -185,6 +196,13 @@ public class ZorkGame {
 
                 } else{
                     Console.print("fight who?");
+                }
+                break;
+            case "use":
+                if (command.hasSecondWord() && player.getInventory().hasItem(command.getSecondWord())) {
+                    player.getInventory().getItem(command.getSecondWord()).use();
+                }else{
+                    Console.print("use what?");
                 }
                 break;
             default:

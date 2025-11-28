@@ -1,16 +1,37 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Character{
+    private Ability abilityAwaitingIndex;
 
     public Player(String name, Room startingRoom, List<Item> items) {
         super(name, startingRoom, items, 1);
+        this.xp = 0;
+        this.setActiveAbilities(new Ability[]{null, null, null, null});
     }
 
-    public Player(String name, Room startingRoom, List<Item> items, int level){
-        super(name, startingRoom, items, level);
+    @Override
+    public void loseBattle(){
+        //lose battle
     }
 
+    public void beginSelectAbilityIndex(Ability ability){
+        abilityAwaitingIndex = ability;
+        ZorkGame.getController().selectAbilityIndexRequest(ability);
+    }
+
+    public void setAbilityByIndex(int index){
+        selectedAbilities[index] = abilityAwaitingIndex;
+        abilityAwaitingIndex = null;
+
+        for(Ability ability : selectedAbilities){
+            if(ability == null){
+                return;
+            }else{
+                System.out.println(ability.getName());
+                System.out.println(ability.getCurrentUses());
+            }
+        }
+    }
 
 
 

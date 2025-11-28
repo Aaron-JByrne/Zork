@@ -19,22 +19,21 @@ public class Battle {
         this.npc = npc;
         this.isOver = false;
         validateMoveSets();
+        System.out.println("BATTLE STARTED");
     }
 
     public boolean isFinished(){
         return isOver;
     }
 
-    public Ability getNPCAbility(){
-        return npc.getActiveAbilities()[0];
+    public Ability getNPCAbility(BattleCharacter npc){
+        return npc.getAbility(0);
     }
 
-    public void performTurn(String abilityName){
-        System.out.println("\\\\\\\\\\\\\\\\\\\\\\TURN BEGAN////////////////////");
-
+    public void performTurn(int index){
         try {
-            Ability player1Ability = (userPriority) ? getAbilityByName(abilityName) : getNPCAbility();
-            Ability player2Ability = (userPriority) ? getNPCAbility() : getAbilityByName(abilityName);
+            Ability player1Ability = (userPriority) ? user.getActiveAbilities()[index] : getNPCAbility(player1);
+            Ability player2Ability = (userPriority) ? getNPCAbility(player2) : user.getActiveAbilities()[index];
 
             player1.useAbility(player1Ability, player2);
             if(hasLost(player2)){
@@ -93,19 +92,6 @@ public class Battle {
 //    }
 
 
-
-    public Ability getAbilityByName(String abilityName){
-        for(Ability ability : user.getActiveAbilities()){
-            if(ability.getName().equals(abilityName)){
-                if(ability.getUses() > 0){
-                    return ability;
-                }
-            }
-        }
-        return null;
-    }
-
-
     public boolean hasLost(BattleCharacter battleChar){
         if(battleChar.getCharacter().getHealth() <= 0){
             end(battleChar);
@@ -116,9 +102,14 @@ public class Battle {
     }
 
     public void end(BattleCharacter loser){
+        this.loser = loser;
+        int xpRewards = loser.getCharacter().getLevel() * 10;
         this.winner = (loser == player2) ? player1 : player2;
+        winner.getCharacter().addXP(xpRewards);
+        loser.getCharacter().loseBattle();
         System.out.printf("winner - %s\nloser - %s\n",winner.getCharacter().getName(), loser.getCharacter().getName());
         isOver = true;
+
         ZorkGame.getInstance().onBattleEnd();
     }
 }
