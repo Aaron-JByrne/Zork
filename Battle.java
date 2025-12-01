@@ -26,6 +26,10 @@ public class Battle {
         return isOver;
     }
 
+    public Character getNPC(){
+        return npc;
+    }
+
     public Ability getNPCAbility(BattleCharacter npc){
         return npc.getAbility(0);
     }

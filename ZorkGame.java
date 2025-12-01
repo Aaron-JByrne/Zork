@@ -24,6 +24,7 @@ public class ZorkGame {
     private GameState state;
     private Battle currentBattle;
     private Arrow arrow;
+    private QuestManager questManager;
 
     private static ZorkGame instance = null;
 
@@ -49,48 +50,50 @@ public class ZorkGame {
     }
 
     private void createRooms() {
-        Room Outside, Forest, forestClearing;
+        Room alley, vordhosbnStreet, warehouse;
 
         Ability firestarter = new Ability("firestarter", "sets opponent ablaze", 40, 4);
         Disc firestarterDisc = new Disc(firestarter);
 
 
         // create rooms
-        Outside = new Room("Outside", "You are outside", 0, 0);
-        Forest = new Room("Forest", "You are in the forest.", 0, -1);
-        forestClearing = new Room("Clearing", "you enter a clearing in the forest", 1, -1, firestarterDisc);
+        alley = new Room("Alley", "you are in an Alley, graffiti covers the walls", 0, 0);
+        vordhosbnStreet = new Room("vordhosbn street", "You are on vordhosbn street", 0, -1);
+        warehouse = new Room("Warehouse", "you are in an abandoned warehouse", -1, -1, firestarterDisc);
 
-        new Minimap(Outside, Forest, forestClearing);
+        new Minimap(alley, vordhosbnStreet, warehouse);
 
         // initialise room exits
-        Outside.setExit(Dir.SOUTH, Forest);
-        Forest.setExit(Dir.NORTH, Outside);
-        Forest.setExit(Dir.EAST, forestClearing);
-        forestClearing.setExit(Dir.WEST, Forest);
+        alley.setExit(Dir.SOUTH, vordhosbnStreet);
+        vordhosbnStreet.setExit(Dir.NORTH, alley);
+        vordhosbnStreet.setExit(Dir.WEST, warehouse);
+        warehouse.setExit(Dir.EAST, vordhosbnStreet);
 
         // create the player character and start outside
 
 
-        List<Item> playerInventory = new ArrayList<>();
-
-        player = new Player("player", Outside, playerInventory);
+        player = new Player("player", alley);
         player.setActiveAbilities(new Ability[]{null, null, null, null});
 
         this.arrow = new Arrow();
-        arrow.setTargetRoom(forestClearing);
-        playerInventory.add(arrow);
+        arrow.setTargetRoom(warehouse);
+        player.getInventory().addItem(arrow);
 
         Ability tabulaRasa = new Ability("tabulaRasa", "blank slate", 40, 4);
         Item tabulaRasaCD = new Disc(tabulaRasa);
         ArrayList<Item> enemyInventory = new ArrayList<>();
         enemyInventory.add(tabulaRasaCD);
 
+        this.questManager = new QuestManager(player);
+
 //        Ability punch = new Ability("punch", "punch", 15, 5);
         Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 5, 10);
-        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
-        enemy.setActiveAbilities(new Ability[]{takyon, null, null, null});
+//        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
+//        enemy.setActiveAbilities(new Ability[]{takyon, null, null, null});
 //        enemy.addAbility(takyon);
 
+//        Character enemy = new Character("Bandit", Outside, 1);
+//        enemy.setActiveAbilities(new Ability[]{takyon, null, null, null});
     }
 
     public void play() {
@@ -107,14 +110,9 @@ public class ZorkGame {
     }
 
     private void printWelcome() {
-//        System.out.println();
-//        System.out.println("Welcome to the University adventure!");
-//        System.out.println("Type 'help' if you need help.");
-//        System.out.println();
-//        System.out.println(player.getCurrentRoom().getTitle());
-
-        Console.print("You were struck with an arrow, the arrow glows mysteriously,\n    as you remove the arrow you feel a strange power and the arrow seems to point south");
-        Console.print("Type 'help' if you need help.");
+        Console.print("You were struck with an arrow, the arrow glows mysteriously,\nYou remove the arrow and place it into your Inventory.\nYou feel the arrow pulsing with energy.");
+        Console.print("hint: type 'use Arrow' to activate it");
+//        Console.print("Type 'help' if you need help.");
         player.getCurrentRoom().describe();
     }
 
@@ -235,6 +233,10 @@ public class ZorkGame {
     public void onBattleEnd(){
         this.state = GameState.EXPLORATION;
         controller.updateState(this.state);
+    }
+
+    public QuestManager getQuestManager(){
+        return this.questManager;
     }
 
     private void goRoom(Command command) {

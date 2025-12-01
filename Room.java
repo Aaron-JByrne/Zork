@@ -1,14 +1,11 @@
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Room implements Serializable {
     private String roomTitle;
     private Map<Dir, Room> exits;// Map direction to neighboring Room
     private Inventory inventory;
-    private ArrayList<Character> characters = new ArrayList<>();
+    private List<Character> characters = new ArrayList<>();
     private String description;
     private int x;
     private int y;
@@ -22,17 +19,13 @@ public class Room implements Serializable {
         this.y = y;
     }
 
-    public Room(String title, String description, int x, int y, Item... item ){
+    public Room(String title, String description, int x, int y, Item... items){
         this.roomTitle = title;
         exits = new HashMap<>();
         this.description = description;
-        List<Item> defaultInventory = new ArrayList<>();
-        for(Item i : item){
-            defaultInventory.add(i);
-        }
         this.x = x;
         this.y = y;
-        this.inventory = new Inventory(this.roomTitle, defaultInventory);
+        this.inventory = new Inventory(this.roomTitle, items);
     }
 
     public void describe(){
@@ -41,6 +34,10 @@ public class Room implements Serializable {
         for(Character character : characters){
             Console.print(character.getName() + " is here.");
         }
+    }
+
+    public List<Character> getCharacters(){
+        return characters;
     }
 
     public int getX(){
@@ -102,12 +99,12 @@ public class Room implements Serializable {
 
     public void removeCharacter(Character character){
         characters.remove(character);
-        if (character.getHealth() <= 0){
-            Inventory inventory = character.getInventory();
-            for(int i = inventory.getItems().size()-1; i >= 0; i--){
-                inventory.sendItem(this.inventory, inventory.getItems().get(i));
-            }
-        }
+//        if (character.getHealth() <= 0){
+//            Inventory inventory = character.getInventory();
+//            for(int i = inventory.getItems().size()-1; i >= 0; i--){
+//                inventory.sendItem(this.inventory, inventory.getItems().get(i));
+//            }
+//        }
     }
 
 }

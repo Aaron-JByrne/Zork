@@ -3,8 +3,9 @@ import java.util.List;
 public class Player extends Character{
     private Ability abilityAwaitingIndex;
 
-    public Player(String name, Room startingRoom, List<Item> items) {
-        super(name, startingRoom, items, 1);
+    public Player(String name, Room startingRoom, Item... items) {
+        super(name, null, 1, items);
+        this.currentRoom = startingRoom;
         this.xp = 0;
         this.setActiveAbilities(new Ability[]{null, null, null, null});
     }
@@ -14,24 +15,18 @@ public class Player extends Character{
         //lose battle
     }
 
-    public void beginSelectAbilityIndex(Ability ability){
+    public void beginSelectAbilityIndex(Ability ability, Disc disc){
         abilityAwaitingIndex = ability;
         ZorkGame.getController().selectAbilityIndexRequest(ability);
+        inventory.removeItem(disc);
     }
 
     public void setAbilityByIndex(int index){
         selectedAbilities[index] = abilityAwaitingIndex;
         abilityAwaitingIndex = null;
-
-        for(Ability ability : selectedAbilities){
-            if(ability == null){
-                return;
-            }else{
-                System.out.println(ability.getName());
-                System.out.println(ability.getCurrentUses());
-            }
-        }
+        Console.print("The disc vanishes");
     }
+
 
 
 

@@ -44,6 +44,7 @@ public class BattleCharacter {
 
     public void useAbility(Ability ability, BattleCharacter target){
         ability.use();
+        Console.print(String.format("%s uses %s!", character.getName(), ability.getName()));
         target.recieveAttack(ability);
 
     }

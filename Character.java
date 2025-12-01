@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Character {
+public class Character implements Nameable{
     protected String name;
     protected Room currentRoom;
     protected Inventory inventory;
@@ -20,21 +20,12 @@ public class Character {
         this.level = 1;
     }
 
-    public Character(String name, Room startingRoom, List<Item> items) {
-        //this(name, startingRoom);
+    public Character(String name, Room startingRoom, int level, Item... items){
         this.name = name;
         this.currentRoom = startingRoom;
-        startingRoom.addCharacter(this);
-        this.inventory = new Inventory("Inventory", items);
-        this.health = 100;
-        this.level = 1;
-        //System.out.println(items);
-    }
-
-    public Character(String name, Room startingRoom, List<Item> items, int level){
-        this.name = name;
-        this.currentRoom = startingRoom;
-        startingRoom.addCharacter(this);
+        if(startingRoom != null) {
+            startingRoom.addCharacter(this);
+        }
         this.inventory = new Inventory("Inventory", items);
         this.health = 100;
         this.level = level;
@@ -111,8 +102,6 @@ public class Character {
         Console.print(String.format("%s : %d HP", name, health));
     }
 
-
-
 //    public void useAbility(Ability ability, Character target){
 //        Console.print(String.format("%s uses %s",this.name, ability.getName()));
 //        ability.use();
@@ -153,5 +142,6 @@ public class Character {
 
     public void loseBattle(){
         inventory.sendAllItems(currentRoom.getInventory());
+        currentRoom.removeCharacter(this);
     }
 }

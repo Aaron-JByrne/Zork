@@ -6,7 +6,6 @@ public class GameController{
 
     public GameController(){
         this.parser = new Parser();
-
     }
 
     public void setModel(ZorkGame model){
@@ -18,11 +17,15 @@ public class GameController{
     }
 
     public void takeString(String input){
+        model.getQuestManager().update();
         Command command = parser.getCommand(input);
         GameState state = model.processCommand(command);
         updateState(state);
-
         refreshUI();
+    }
+
+    public void onMovementButton(String direction){
+        takeString(String.format("go %s", direction.toLowerCase()));
     }
 
 //    public void onAbilityClick(String abilityName) {
@@ -46,20 +49,22 @@ public class GameController{
     public void updateState(GameState gameState){
         view.updateState(gameState);
         this.state = gameState;
-        if (state==GameState.FIGHT)
-        {
-            String[] abilityNames = new String[4];
-            int i = 0;
-            for(Ability ability : model.getPlayer().getActiveAbilities()) {
-                if(ability != null){
-                    abilityNames[i++] = ability.getName();
-                }
-                else{
-                    abilityNames[i++] = "";
-                }
-            }
-            view.setAbilityButtons(abilityNames);
+        if (state==GameState.FIGHT){
+
         }
+//        {
+//            String[] abilityNames = new String[4];
+//            int i = 0;
+//            for(Ability ability : model.getPlayer().getActiveAbilities()) {
+//                if(ability != null){
+//                    abilityNames[i++] = ability.getName();
+//                }
+//                else{
+//                    abilityNames[i++] = "";
+//                }
+//            }
+//            view.setAbilityButtons(abilityNames);
+//        }
 
     }
 
@@ -67,6 +72,8 @@ public class GameController{
         view.updateHP(model.getPlayer().getHealth());
         view.updateRoom(model.getPlayer().getCurrentRoom().getTitle());
         view.updateLevel(model.getPlayer().getLevel());
+        view.updateRoomCharacters(model.getPlayer().getCurrentRoom().getCharacters());
+        view.updateRoomItems(model.getPlayer().getCurrentRoom().getInventory().getItems());
 
         if(state == GameState.FIGHT){
             boolean[] usableAbilites = new boolean[4];
@@ -76,19 +83,26 @@ public class GameController{
 //                System.out.println(usableAbilites[i-1]);
 //                System.out.println(i);
             }
+            view.updateEnemyHP(model.getBattle().getNPC().getHealth());
             view.updateAbilityButtons(usableAbilites);
+            view.setAbilityButtons(model.getPlayer().getActiveAbilities());
         }else if(state == GameState.EXPLORATION){
             if(model.getArrow().hasTargetRoom()){
                 if(model.getArrow().isActivated()) {
+                    view.enableArrow();
+
                     if(model.getArrow().hasReachedTarget()){
                         model.getArrow().deactivate();
+                        view.disableArrow();
                         model.getArrow().setTargetRoom(null);
-                        System.out.println("Arrow has reached target room");
+//                        System.out.println("Arrow has reached target room");
                     }else {
                         view.updateArrow(model.getArrow().getAngle());
                     }
-                }
 
+                }else{
+                    view.disableArrow();
+                }
             }
         }
     }

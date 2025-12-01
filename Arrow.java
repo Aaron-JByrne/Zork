@@ -25,8 +25,8 @@ public class Arrow extends Item{
         Room room = player.currentRoom;
         int yDif = targetRoom.getY() - player.getCurrentRoom().getY();
         int xDif = targetRoom.getX() - player.getCurrentRoom().getX();
-        double result = Math.atan((double) yDif / xDif);
-        Console.print(String.format("xdif - %d, ydif - %d", xDif, yDif));
+        double result = Math.atan2(yDif, xDif);
+//        Console.print(String.format("xdif - %d, ydif - %d", xDif, yDif));
         System.out.printf("xdif - %d, ydif - %d\n", xDif, yDif);
         System.out.println((result*(180/Math.PI)));
 

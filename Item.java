@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-abstract public class Item implements Serializable {
+abstract public class Item implements Nameable, Serializable {
     protected String description;
     protected String name;
     protected boolean isVisible;
