@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Character implements Nameable{
+public class Character implements Nameable, Serializable {
     protected String name;
     protected Room currentRoom;
     protected Inventory inventory;
@@ -10,15 +11,6 @@ public class Character implements Nameable{
     protected int health;
     protected int level;
     protected int xp;
-
-    public Character(String name, Room startingRoom) {
-        this.name = name;
-        this.currentRoom = startingRoom;
-        startingRoom.addCharacter(this);
-        this.inventory = new Inventory("Inventory");
-        this.health = 100;
-        this.level = 1;
-    }
 
     public Character(String name, Room startingRoom, int level, Item... items){
         this.name = name;
@@ -94,6 +86,10 @@ public class Character implements Nameable{
         return selectedAbilities;
     }
 
+    public boolean canAttack(){
+        return new BattleCharacter(this).canAttack();
+    }
+
     public void setActiveAbilities(Ability[] abilities){
         this.selectedAbilities = abilities;
     }
@@ -114,6 +110,10 @@ public class Character implements Nameable{
 
     public void changeHealth(int amount){
         health += amount;
+        System.out.println(this.getName());
+        System.out.println(amount);
+        System.out.println(health);
+        System.out.println();
     }
 
     public void setHealth(int health){

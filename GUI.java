@@ -21,7 +21,7 @@ public class GUI {
     JLabel lvlLabel = new JLabel();
     JLabel hpLabel = new JLabel();
 
-
+    JLabel inventoryLabel = new JLabel("items in Inventory:");
 
     JLabel chooseAbilityLabel = new JLabel("Select the move you want to overwrite");
 
@@ -49,6 +49,8 @@ public class GUI {
     JButton westButton = new JButton("West");
 
     JPanel centerPanel = new JPanel();
+
+    JButton struggleButton = new JButton("Struggle");
 
     static JTextField textField = new JTextField();
 
@@ -87,15 +89,17 @@ public class GUI {
         statPanel.add(lvlLabel);
         statPanel.add(arrowLabel);
 
-        abilityButton0.addActionListener(new abilityListener(0));
-        abilityButton1.addActionListener(new abilityListener(1));
-        abilityButton2.addActionListener(new abilityListener(2));
-        abilityButton3.addActionListener(new abilityListener(3));
+        abilityButton0.addActionListener(new AbilityListener(0));
+        abilityButton1.addActionListener(new AbilityListener(1));
+        abilityButton2.addActionListener(new AbilityListener(2));
+        abilityButton3.addActionListener(new AbilityListener(3));
 
         abilityButtonsPanel.add(abilityButton0);
         abilityButtonsPanel.add(abilityButton1);
         abilityButtonsPanel.add(abilityButton2);
         abilityButtonsPanel.add(abilityButton3);
+
+        struggleButton.addActionListener(new AbilityListener(-1));
 
         westPanel.setLayout(new BorderLayout());
         movementButtonsPanel.setLayout(new GridLayout(3,3));
@@ -117,12 +121,13 @@ public class GUI {
         westButton.addActionListener(new movementListener());
 
         westPanel.add(roomPanel, BorderLayout.CENTER);
+        westPanel.add(inventoryLabel, BorderLayout.NORTH);
         roomPanel.setLayout(new FlowLayout());
         roomPanel.add(roomLabel);
         roomPanel.add(roomCharactersLabel);
         roomPanel.add(roomItemsLabel);
 
-        frame.setSize(500, 500);
+        frame.setSize(1000, 600);
         frame.setVisible(true);
 
         textField.setEditable(true);
@@ -169,13 +174,13 @@ public class GUI {
         }
     }
 
-
     public void setAbilityButtons(Ability[] abilities){
         for(int i=0;i<4;i++){
             if(abilities[i] == null){
+                abilityButtons[i].setText("");
                 continue;
             }
-            abilityButtons[i].setText("<html>"+abilities[i].getName()+"<small>"+abilities[i].getCurrentUses()+"/"+abilities[i].getInitialUses()+"</small></html>");
+            abilityButtons[i].setText("<html>"+abilities[i].getName()+"<small>"+abilities[i].getCurrentUses()+"/"+abilities[i].getInitialUses()+"<br>"+abilities[i].getAbilityInfo()+"</small></html>");
         }
     }
 
@@ -185,10 +190,10 @@ public class GUI {
         }
     }
 
-    class abilityListener implements ActionListener{
+    class AbilityListener implements ActionListener{
         private int index;
 
-        abilityListener(int index){
+        AbilityListener(int index){
             this.index = index;
         }
 
@@ -233,6 +238,7 @@ public class GUI {
     public void showAbilityIndexSelector(String abilityName){
         updateAbilityButtons(new boolean[]{true, true, true, true});
         frame.add(fightPanel, BorderLayout.EAST);
+        fightPanel.remove(enemyHPLabel);
         fightPanel.add(chooseAbilityLabel,BorderLayout.NORTH);
         fightPanel.add(abilityButtonsPanel,BorderLayout.CENTER);
         frame.revalidate();
@@ -250,15 +256,28 @@ public class GUI {
     }
 
     public void updateRoomCharacters(List<Character> characters){
-        updateRoomList(roomCharactersLabel, characters, "Characters in room");
+        updateList(roomCharactersLabel, characters, "Characters in room");
     }
 
     public void updateRoomItems(List<Item> items){
-        updateRoomList(roomItemsLabel, items, "Items in room");
+        updateList(roomItemsLabel, items, "Items in room");
     }
 
-    private <T extends Nameable> void updateRoomList(JLabel listLabel, List<T> elements, String listTitle){
+    public void updateInventory(List<Item> items){
+        updateList(inventoryLabel, items, "Items in Inventory");
+    }
+
+    public void showStruggleButton(){
+        fightPanel.add(struggleButton, BorderLayout.SOUTH);
+    }
+
+    private <T extends Nameable> void updateList(JLabel listLabel, List<T> elements, String listTitle){
         String listString = "<html>" + listTitle + ": <ul>";
+        if(elements.isEmpty()){
+            listString += "<li><i>None</i></li></ul></html>";
+            listLabel.setText(listString);
+            return;
+        }
         for(T element : elements){
             listString += "<li>" + element.getName() + "</li>";
         }
@@ -267,7 +286,6 @@ public class GUI {
     }
 
     public BufferedImage rotate(BufferedImage img, double theta){
-        System.out.println(theta);
         theta = (-theta);
 
         //changing clockwise rotation to counterclockwise rotation

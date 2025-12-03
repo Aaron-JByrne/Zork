@@ -49,9 +49,6 @@ public class GameController{
     public void updateState(GameState gameState){
         view.updateState(gameState);
         this.state = gameState;
-        if (state==GameState.FIGHT){
-
-        }
 //        {
 //            String[] abilityNames = new String[4];
 //            int i = 0;
@@ -65,7 +62,6 @@ public class GameController{
 //            }
 //            view.setAbilityButtons(abilityNames);
 //        }
-
     }
 
     public void refreshUI(){
@@ -74,7 +70,8 @@ public class GameController{
         view.updateLevel(model.getPlayer().getLevel());
         view.updateRoomCharacters(model.getPlayer().getCurrentRoom().getCharacters());
         view.updateRoomItems(model.getPlayer().getCurrentRoom().getInventory().getItems());
-
+        view.updateInventory(model.getPlayer().getInventory().getItems());
+        view.setAbilityButtons(model.getPlayer().getActiveAbilities());
         if(state == GameState.FIGHT){
             boolean[] usableAbilites = new boolean[4];
             int i = 0;
@@ -85,7 +82,10 @@ public class GameController{
             }
             view.updateEnemyHP(model.getBattle().getNPC().getHealth());
             view.updateAbilityButtons(usableAbilites);
-            view.setAbilityButtons(model.getPlayer().getActiveAbilities());
+            if(model.getBattle().getPlayerBC().canStruggle()){
+                view.showStruggleButton();
+            }
+
         }else if(state == GameState.EXPLORATION){
             if(model.getArrow().hasTargetRoom()){
                 if(model.getArrow().isActivated()) {
@@ -94,7 +94,7 @@ public class GameController{
                     if(model.getArrow().hasReachedTarget()){
                         model.getArrow().deactivate();
                         view.disableArrow();
-                        model.getArrow().setTargetRoom(null);
+                        model.getArrow().targetReached();
 //                        System.out.println("Arrow has reached target room");
                     }else {
                         view.updateArrow(model.getArrow().getAngle());

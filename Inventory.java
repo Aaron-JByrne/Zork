@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.Serializable;
 
-public class Inventory implements java.io.Serializable{
+public class Inventory implements Serializable{
     static List<Inventory> inventories = new ArrayList<>();
 
     private String name;
@@ -54,10 +55,10 @@ public class Inventory implements java.io.Serializable{
     }
 
     public Item getItem(String name){
-        System.out.println(name);
-        System.out.println(this.items.size());
+//        System.out.println(name);
+//        System.out.println(this.items.size());
         for(Item item : this.items){
-            System.out.println(item);
+//            System.out.println(item);
             if(item.getName().equals(name)){
                 return item;
             }

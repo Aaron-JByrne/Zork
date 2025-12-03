@@ -10,6 +10,13 @@ public class Battle {
     private BattleCharacter loser;
     private BattleCharacter winner;
 
+    private Ability struggle = new Ability("Struggle", "last resort", 5, 1){
+        @Override
+        public void use(){
+            return;
+        }
+    };
+
 
     public Battle(Character user, Character npc) {
         userPriority = (user.getLevel() >= npc.getLevel());
@@ -19,7 +26,7 @@ public class Battle {
         this.npc = npc;
         this.isOver = false;
         validateMoveSets();
-        System.out.println("BATTLE STARTED");
+//        System.out.println("BATTLE STARTED");
     }
 
     public boolean isFinished(){
@@ -30,14 +37,26 @@ public class Battle {
         return npc;
     }
 
+    public BattleCharacter getPlayerBC(){
+        return (userPriority) ? player1 : player2;
+    }
+
     public Ability getNPCAbility(BattleCharacter npc){
         return npc.getAbility(0);
     }
 
     public void performTurn(int index){
         try {
-            Ability player1Ability = (userPriority) ? user.getActiveAbilities()[index] : getNPCAbility(player1);
-            Ability player2Ability = (userPriority) ? getNPCAbility(player2) : user.getActiveAbilities()[index];
+            Ability player1Ability;
+            Ability player2Ability;
+
+            if(index == -1) {
+                player1Ability = (userPriority) ? struggle : getNPCAbility(player1);
+                player2Ability = (userPriority) ? getNPCAbility(player2) : struggle;
+            }else{
+                player1Ability = (userPriority) ? user.getActiveAbilities()[index] : getNPCAbility(player1);
+                player2Ability = (userPriority) ? getNPCAbility(player2) : user.getActiveAbilities()[index];
+            }
 
             player1.useAbility(player1Ability, player2);
             if(hasLost(player2)){
@@ -58,10 +77,12 @@ public class Battle {
 
     public void validateMoveSets(){
         if(!player1.canAttack()) {
-            end(player1);
+            player1.allowStruggle();
+//            end(player1);
         }
         if(!player2.canAttack()){
-            end(player2);
+            player2.allowStruggle();
+//            end(player2);
         }
     }
 //    public boolean performtestturn(String abilityName){

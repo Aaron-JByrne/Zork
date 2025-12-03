@@ -1,18 +1,20 @@
-public class QuestManager {
-    private Player player;
+import java.io.Serializable;
+
+public class QuestManager implements Serializable {
+    private Arrow arrow;
     private int stage;
     private Character firstEnemy;
 
-    QuestManager(Player player){
-        this.player = player;
+    QuestManager(Arrow arrow){
         this.stage = 0;
+        this.arrow = arrow;
     }
 
     public void update(){
         switch (stage){
             case 0:
                 boolean playerHasAbilities = false;
-                for(Ability ability : player.getActiveAbilities()){
+                for(Ability ability : ZorkGame.getInstance().getPlayer().getActiveAbilities()){
                     if(ability != null){
                         playerHasAbilities = true;
                         break;
@@ -25,10 +27,16 @@ public class QuestManager {
                 }
                 break;
             case 1:
+                System.out.println("case 1");
                 if(firstEnemy.getHealth() <= 0){
                     stage++;
-                    break;
+                    arrow.setTargetRoom(Minimap.rooms.get("Home"));
+                    System.out.println(Minimap.rooms.get("Home"));
                 }
+                break;
+            case 2:
+
+                break;
          }
     }
 

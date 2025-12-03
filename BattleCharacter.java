@@ -1,9 +1,8 @@
-import java.util.Arrays;
-
 //Wrapper class for characters when they enter a battle
 public class BattleCharacter {
-    Character character;
-    Ability[] moveSet;
+    private Character character;
+    private Ability[] moveSet;
+    private boolean canStruggle = false;
 
     BattleCharacter(Character character){
         this.character = character;
@@ -27,8 +26,8 @@ public class BattleCharacter {
         return usable;
     }
 
-    public void recieveAttack(Ability ability){
-        Console.print(String.format("%s recieves %d dmg", character.getName(), ability.getDamage()));
+    public void receiveAttack(Ability ability){
+        Console.print(String.format("%s %s", character.getName(), ability.getActionText()));
         character.changeHealth(-ability.getDamage());
     }
 
@@ -42,10 +41,21 @@ public class BattleCharacter {
         return moveSet[index];
     }
 
+    public void allowStruggle(){
+        canStruggle = true;
+    }
+
+    public boolean canStruggle(){
+        return canStruggle;
+    }
+
     public void useAbility(Ability ability, BattleCharacter target){
         ability.use();
         Console.print(String.format("%s uses %s!", character.getName(), ability.getName()));
-        target.recieveAttack(ability);
-
+        if(ability.getDamage() < 0){
+            this.receiveAttack(ability);
+        }else {
+            target.receiveAttack(ability);
+        }
     }
 }

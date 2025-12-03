@@ -1,19 +1,4 @@
-/* This game is a classic text-based adventure set in a university environment.
-   The player starts outside the main entrance and can navigate through different rooms like a 
-   lecture theatre, campus pub, computing lab, and admin office using simple text commands (e.g. "go east", "go west").
-    The game provides descriptions of each location and lists possible exits.
-
-Key features include:
-Room navigation: Moving among interconnected rooms with named exits.
-Simple command parser: Recognises a limited set of commands like "go", "help", and "quit".
-Player character: Tracks current location and handles moving between rooms.
-Text descriptions: Provides immersive text output describing the player's surroundings and available options.
-Help system: Lists valid commands to guide the player.
-Overall, it recreates the classic Zork interactive fiction experience with a university-themed setting, 
-emphasising exploration and simple command-driven gameplay
-*/
-
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +18,7 @@ public class ZorkGame {
         this.controller = controller;
         controller.setModel(this);
         instance = this;
-        createRooms();
+        initGame();
         parser = new Parser();
         //guiParser = new Parser();
     }
@@ -49,10 +34,12 @@ public class ZorkGame {
         return instance.controller;
     }
 
-    private void createRooms() {
-        Room alley, vordhosbnStreet, warehouse;
+    private void initGame() {
+        Room alley, vordhosbnStreet, warehouse, pulsewidthStreet, home, aisatsanaStreet, park, forest;
+
 
         Ability firestarter = new Ability("firestarter", "sets opponent ablaze", 40, 4);
+//        firstarter = new Ability("firestarter", "f", 2)
         Disc firestarterDisc = new Disc(firestarter);
 
 
@@ -60,16 +47,37 @@ public class ZorkGame {
         alley = new Room("Alley", "you are in an Alley, graffiti covers the walls", 0, 0);
         vordhosbnStreet = new Room("vordhosbn street", "You are on vordhosbn street", 0, -1);
         warehouse = new Room("Warehouse", "you are in an abandoned warehouse", -1, -1, firestarterDisc);
+        pulsewidthStreet = new Room("pulsewidth street", "you are on pulsewidth street", 1, -1);
+        home = new Room("Home", "You are home, you may 'rest' here and replenish", 1, -2);
+        aisatsanaStreet = new Room("aisatsana street", "you are on aisatsana street", 2, -1);
+        park = new Room("Park", "you are in a park", 0, -2);
+        forest = new Room("Forest", "you are in a forest",-1,-2);
 
-        new Minimap(alley, vordhosbnStreet, warehouse);
+        new Minimap(alley, vordhosbnStreet, warehouse, pulsewidthStreet, home, aisatsanaStreet, park, forest);
+
 
         // initialise room exits
         alley.setExit(Dir.SOUTH, vordhosbnStreet);
         vordhosbnStreet.setExit(Dir.NORTH, alley);
+
         vordhosbnStreet.setExit(Dir.WEST, warehouse);
         warehouse.setExit(Dir.EAST, vordhosbnStreet);
 
-        // create the player character and start outside
+        vordhosbnStreet.setExit(Dir.EAST, pulsewidthStreet);
+        pulsewidthStreet.setExit(Dir.WEST, vordhosbnStreet);
+
+        home.setExit(Dir.NORTH, pulsewidthStreet);
+        pulsewidthStreet.setExit(Dir.SOUTH, home);
+
+        pulsewidthStreet.setExit(Dir.EAST, aisatsanaStreet);
+        aisatsanaStreet.setExit(Dir.WEST, pulsewidthStreet);
+
+        vordhosbnStreet.setExit(Dir.SOUTH, park);
+        park.setExit(Dir.NORTH, vordhosbnStreet);
+
+        forest.setExit(Dir.EAST, park);
+        park.setExit(Dir.WEST, forest);
+
 
 
         player = new Player("player", alley);
@@ -81,13 +89,16 @@ public class ZorkGame {
 
         Ability tabulaRasa = new Ability("tabulaRasa", "blank slate", 40, 4);
         Item tabulaRasaCD = new Disc(tabulaRasa);
-        ArrayList<Item> enemyInventory = new ArrayList<>();
-        enemyInventory.add(tabulaRasaCD);
 
-        this.questManager = new QuestManager(player);
+        Ability solace = new Ability("solace", "heals you for 15", -15, 10);
+        Item solaceCD = new Disc(solace);
+
+        this.questManager = new QuestManager(arrow);
 
 //        Ability punch = new Ability("punch", "punch", 15, 5);
-        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 5, 10);
+        Ability takyon = new Ability("takyon", "an attack that moves faster then the speed of light", 25, 8);
+        Character enemy = new Character("hostile", forest, 2, solaceCD);
+        enemy.setActiveAbilities(new Ability[]{takyon, null, null, null});
 //        Character enemy = new Character("enemy", Forest, enemyInventory, 1);
 //        enemy.setActiveAbilities(new Ability[]{takyon, null, null, null});
 //        enemy.addAbility(takyon);
@@ -136,7 +147,7 @@ public class ZorkGame {
                 goRoom(command);
                 break;
             case "quit":
-                Console.print("quit??");
+                Console.print("quit???????");
             case "tp":
                 //System.out.printf("Teleporting to %s\n", command.getSecondWord());
                 Console.print("Teleporting to " + command.getSecondWord());
@@ -181,19 +192,18 @@ public class ZorkGame {
                     Console.print("drop what?");
                 }
                 break;
-            case "save":
-                Serializer serializer = new Serializer();
-                serializer.write(player.getCurrentRoom());
-                break;
             case "fight":
-                if (command.hasSecondWord() && player.getCurrentRoom().hasCharacter(command.getSecondWord())) {
-                    Character target = player.getCurrentRoom().getCharacter(command.getSecondWord());
-                    this.state = GameState.FIGHT;
-                    Battle battle = new Battle(player, target);
-                    this.setBattle(battle);
-
-                } else{
-                    Console.print("fight who?");
+                if(player.canAttack()) {
+                    if (command.hasSecondWord() && player.getCurrentRoom().hasCharacter(command.getSecondWord())) {
+                        Character target = player.getCurrentRoom().getCharacter(command.getSecondWord());
+                        this.state = GameState.FIGHT;
+                        Battle battle = new Battle(player, target);
+                        this.setBattle(battle);
+                    } else {
+                        Console.print("fight who?");
+                    }
+                }else{
+                    Console.print("You dont have any abilities to use!");
                 }
                 break;
             case "use":
@@ -203,8 +213,33 @@ public class ZorkGame {
                     Console.print("use what?");
                 }
                 break;
+            case "rest":
+                if(player.getCurrentRoom().getTitle().equals("Home")){
+                    player.rest();
+                    Console.print("Your health has been replenished, and your ability uses have been refilled");
+                    SaveData saveData = new SaveData(player, new ArrayList<>(Minimap.rooms.values()), this.questManager);
+                    saveData.save();
+                    Console.print("Game Saved.");
+                }else{
+                    Console.print("You may not rest here.");
+                }
+                break;
+            case "load":
+                SaveData loaded = SaveData.load();
+                if(loaded == null){
+                    Console.print("No save file found");
+                    break;
+                }
+                this.player = loaded.getPlayer();
+                this.questManager = loaded.getQuestManager();
+                List<Room> rooms = loaded.getRooms();
+                Minimap.rooms.clear();
+                for(Room room : rooms){
+                    Minimap.rooms.put(room.getTitle(), room);
+                }
+                break;
             default:
-                System.out.println("I don't know what you mean...");
+                Console.print("I don't know what you mean...");
                 break;
         }
         return this.state;
@@ -233,6 +268,27 @@ public class ZorkGame {
     public void onBattleEnd(){
         this.state = GameState.EXPLORATION;
         controller.updateState(this.state);
+    }
+
+    public void onPlayerDeath(){
+        if(saveFileExists()){
+            SaveData saveData = SaveData.load();
+            this.player = saveData.getPlayer();
+            this.questManager = saveData.getQuestManager();
+            List<Room> rooms = saveData.getRooms();
+            Minimap.rooms.clear();
+            for(Room room : rooms){
+                Minimap.rooms.put(room.getTitle(), room);
+            }
+        }else{
+            System.out.println("No save file found");
+            initGame();
+        }
+    }
+
+    public boolean saveFileExists(){
+        File saveFile = new File("Savedata.ser");
+        return saveFile.exists();
     }
 
     public QuestManager getQuestManager(){
@@ -272,6 +328,7 @@ public class ZorkGame {
         GUI gui = new GUI(gameController);
         game.play();
 
+        System.out.println(game.saveFileExists());
 
         //Serializer serializer = new Serializer();
         //serializer.read("room1");
