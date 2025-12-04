@@ -26,7 +26,7 @@ public class Battle {
         this.npc = npc;
         this.isOver = false;
         validateMoveSets();
-//        System.out.println("BATTLE STARTED");
+        System.out.println("BATTLE STARTED");
     }
 
     public boolean isFinished(){
@@ -42,6 +42,13 @@ public class Battle {
     }
 
     public Ability getNPCAbility(BattleCharacter npc){
+        for(Ability ability : npc.getMoveset()){
+            if(ability.getCurrentUses() > 0){
+                return ability;
+            }else{
+                continue;
+            }
+        }
         return npc.getAbility(0);
     }
 
@@ -128,7 +135,8 @@ public class Battle {
 
     public void end(BattleCharacter loser){
         this.loser = loser;
-        int xpRewards = loser.getCharacter().getLevel() * 10;
+        int xpRewards = (loser.getCharacter().getLevel()*15)+20;
+        xpRewards = 50;
         this.winner = (loser == player2) ? player1 : player2;
         winner.getCharacter().addXP(xpRewards);
         loser.getCharacter().loseBattle();

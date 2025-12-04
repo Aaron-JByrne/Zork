@@ -9,7 +9,7 @@ public class Ability implements Serializable {
     private String actionText;
     private String abilityInfo;
 
-    Ability(String name, String description, int damage, int uses){
+    public Ability(String name, String description, int damage, int uses){
         this.name = name;
         this.description = description;
         this.damage = damage;
@@ -24,6 +24,12 @@ public class Ability implements Serializable {
             abilityInfo = String.format("deals %d damage", damage);
         }
     }
+
+    public Ability(Ability otherAbility){
+        //Constructor for cloning an instance of an ability so uses arent global
+        this(otherAbility.name, otherAbility.description, otherAbility.damage, otherAbility.initialUses);
+    }
+
 
     public String getAbilityInfo(){
         return abilityInfo;

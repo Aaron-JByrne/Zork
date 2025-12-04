@@ -49,6 +49,10 @@ public class BattleCharacter {
         return canStruggle;
     }
 
+    public Ability[] getMoveset(){
+        return moveSet;
+    }
+
     public void useAbility(Ability ability, BattleCharacter target){
         ability.use();
         Console.print(String.format("%s uses %s!", character.getName(), ability.getName()));

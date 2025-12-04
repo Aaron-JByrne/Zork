@@ -6,6 +6,10 @@ public class Disc extends Item{
         this.ability = ability;
     }
 
+    public String readDisc(){
+        return String.format("%s \uD83D\uDCBF :\n%s\n%d use(s)\n%s is etched onto the back of the disc",ability.getName(),ability.getAbilityInfo(),ability.getInitialUses(), ability.getDescription());
+    }
+
     public String getName(){
         return this.name;
     }
@@ -24,6 +28,7 @@ public class Disc extends Item{
 
 
     public void use(){
-        ZorkGame.getInstance().getPlayer().beginSelectAbilityIndex(this.ability, this);
+        Ability abilityCopy = new Ability(this.ability);
+        ZorkGame.getInstance().getPlayer().beginSelectAbilityIndex(abilityCopy, this);
     }
 }

@@ -14,7 +14,7 @@ public class GUI {
 
     JPanel fightPanel = new JPanel();
     JPanel abilityButtonsPanel = new JPanel();
-    JLabel enemyHPLabel = new JLabel("Enemy health");
+    JLabel enemyLabel = new JLabel();
 
     JPanel statPanel = new JPanel();
 
@@ -47,6 +47,7 @@ public class GUI {
     JButton southButton = new JButton("South");
     JButton eastButton = new JButton("East");
     JButton westButton = new JButton("West");
+    JButton[] movementButtons = {northButton,southButton,eastButton,westButton};
 
     JPanel centerPanel = new JPanel();
 
@@ -158,19 +159,30 @@ public class GUI {
     }
 
     public void updateState(GameState state){
+        System.out.println(state);
 //        System.out.printf("%s is current state\n request for %s\n",this.state,state);
         if(this.state != state) {
             this.state = state;
 //            System.out.println("state changed");
             if (this.state == GameState.FIGHT) {
+                setMovementButtonsEnabled(false);
+                textField.setEnabled(false);
                 frame.add(fightPanel, BorderLayout.EAST);
                 fightPanel.add(abilityButtonsPanel, BorderLayout.CENTER);
-                fightPanel.add(enemyHPLabel, BorderLayout.NORTH);
+                fightPanel.add(enemyLabel, BorderLayout.NORTH);
             }
             if (this.state == GameState.EXPLORATION) {
+                setMovementButtonsEnabled(true);
+                textField.setEnabled(true);
                 frame.remove(fightPanel); //panel is removed from the frame and the heirarchy
                 frame.revalidate(); //revalidates the heirarchy
             }
+        }
+    }
+
+    public void setMovementButtonsEnabled(boolean enabled){
+        for(JButton button : movementButtons){
+            button.setEnabled(enabled);
         }
     }
 
@@ -184,8 +196,8 @@ public class GUI {
         }
     }
 
-    public void updateAbilityButtons(boolean[] abilityBooleanToggles){
-        for(int i=0;i<abilityBooleanToggles.length;i++){
+    public void updateAbilityButtons(boolean[] abilityBooleanToggles) {
+        for (int i = 0; i < abilityBooleanToggles.length; i++) {
             abilityButtons[i].setEnabled(abilityBooleanToggles[i]);
         }
     }
@@ -223,22 +235,26 @@ public class GUI {
         hpLabel.setText("HP: " + hp);
     }
 
-    public void updateEnemyHP(int hp){
-        enemyHPLabel.setText("HP: " + hp);
+//    public void updateEnemyHP(int hp){
+//        enemyHPLabel.setText("enemy HP: " + hp);
+//    }
+
+    public void updateEnemyLabel(String name, int hp, int level){
+        enemyLabel.setText(String.format("%s HP: %d  Level %d",name, hp, level));
     }
 
     public void updateRoom(String roomName){
         roomLabel.setText("\uD83D\uDCCD"+roomName);
     }
 
-    public void updateLevel(int level){
-        lvlLabel.setText("Level: " + level);
+    public void updateLevel(int level, int xp){
+        lvlLabel.setText("Level: " + level + " xp: " + xp);
     }
 
     public void showAbilityIndexSelector(String abilityName){
         updateAbilityButtons(new boolean[]{true, true, true, true});
         frame.add(fightPanel, BorderLayout.EAST);
-        fightPanel.remove(enemyHPLabel);
+        fightPanel.remove(enemyLabel);
         fightPanel.add(chooseAbilityLabel,BorderLayout.NORTH);
         fightPanel.add(abilityButtonsPanel,BorderLayout.CENTER);
         frame.revalidate();
@@ -246,6 +262,7 @@ public class GUI {
 
     public void updateArrow(double theta){
         arrowLabel.setIcon(new ImageIcon(rotate(arrowImage, theta)));
+        System.out.println("gui trying to update arrow method called");
     }
 
     public void enableArrow(){
@@ -279,7 +296,11 @@ public class GUI {
             return;
         }
         for(T element : elements){
-            listString += "<li>" + element.getName() + "</li>";
+            if(element instanceof Disc){
+                listString += "<li>" + element.getName() + " \uD83D\uDCBF</li>";
+            }else {
+                listString += "<li>" + element.getName() + "</li>";
+            }
         }
         listString += "</ul></html>";
         listLabel.setText(listString);

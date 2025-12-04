@@ -6,13 +6,15 @@ public class Arrow extends Item{
     Arrow(){
         super("Arrow", "A mysterious arrow");
         active = false;
-        System.out.println(targetRoom);
+//        System.out.println(targetRoom);
     }
 
     public void use(){
         if (hasTarget){
             active = !active;
+            System.out.printf("has target is true and its %s\n,the arrow is %s\n", targetRoom.getTitle(), (active) ? "active" : "not active");
         }else {
+            Console.print("No current goal");
             System.out.println("no current goal");
             active = false;
         }
@@ -39,9 +41,12 @@ public class Arrow extends Item{
         active = true;
     }
 
-    public boolean hasReachedTarget(){
-        return ZorkGame.getInstance().getPlayer().currentRoom == targetRoom;
+//    public boolean hasReachedTarget(){
+//        return ZorkGame.getInstance().getPlayer().currentRoom == targetRoom;
+//    }
 
+    public boolean hasReachedTarget(){
+        return ZorkGame.getInstance().getPlayer().hasBeenTo(targetRoom);
     }
 
     public boolean isActivated(){
@@ -52,7 +57,7 @@ public class Arrow extends Item{
         this.targetRoom = targetRoom;
         hasTarget = true;
         if(targetRoom != null) {
-            System.out.printf("setting te targetroom to %s\n", targetRoom.getTitle());
+            System.out.printf("setting the target room to %s\n", targetRoom.getTitle());
         }
     }
 
@@ -83,7 +88,9 @@ public class Arrow extends Item{
     }
 
     public Room getTargetRoom(){
+        if(targetRoom == null){
+            System.out.println("trying to get target room but its null");
+        }
         return targetRoom;
     }
-
 }

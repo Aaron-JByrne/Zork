@@ -81,6 +81,9 @@ public class Character implements Nameable, Serializable {
 //            System.out.printf("%d. %s\n",i++,ability.getName());
 //        }
 //    }
+    public void addXP(int xp){
+        return;
+    }
 
     public Ability[] getActiveAbilities(){
         return selectedAbilities;
@@ -94,9 +97,9 @@ public class Character implements Nameable, Serializable {
         this.selectedAbilities = abilities;
     }
 
-    public void displayStatus(){
-        Console.print(String.format("%s : %d HP", name, health));
-    }
+//    public void displayStatus(){
+//        Console.print(String.format("%s : %d HP", name, health));
+//    }
 
 //    public void useAbility(Ability ability, Character target){
 //        Console.print(String.format("%s uses %s",this.name, ability.getName()));
@@ -110,10 +113,8 @@ public class Character implements Nameable, Serializable {
 
     public void changeHealth(int amount){
         health += amount;
-        System.out.println(this.getName());
-        System.out.println(amount);
-        System.out.println(health);
-        System.out.println();
+        health = (health > 100) ? 100 : health;
+        health = (health < 0) ? 0 : health;
     }
 
     public void setHealth(int health){
@@ -122,22 +123,6 @@ public class Character implements Nameable, Serializable {
 
     public int getLevel(){
         return level;
-    }
-
-    public int getXP(){
-        return xp;
-    }
-
-    public void addXP(int xp) {
-        this.xp += xp;
-        if (xp >= 100) {
-            levelUp();
-            this.xp -= 100;
-        }
-    }
-
-    public void levelUp(){
-        this.level++;
     }
 
     public void loseBattle(){

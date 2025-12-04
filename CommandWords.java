@@ -20,6 +20,7 @@ public class CommandWords {
         validCommands.put("fight", "starts a fight with selected character");
         validCommands.put("use", "use an item");
         validCommands.put("rest", "rest in your home to replenish ability uses and health");
+        validCommands.put("read", "reads disc");
     }
 
     public boolean isCommand(String commandWord) {

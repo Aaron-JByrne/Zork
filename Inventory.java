@@ -55,11 +55,8 @@ public class Inventory implements Serializable{
     }
 
     public Item getItem(String name){
-//        System.out.println(name);
-//        System.out.println(this.items.size());
         for(Item item : this.items){
-//            System.out.println(item);
-            if(item.getName().equals(name)){
+            if(item.getName().equalsIgnoreCase(name)){
                 return item;
             }
         }

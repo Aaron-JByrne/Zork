@@ -5,11 +5,13 @@ public class SaveData implements Serializable {
     Player player;
     List<Room> rooms;
     QuestManager questManager;
+    Arrow arrow;
 
-    public SaveData(Player player, List<Room> rooms, QuestManager questManager){
+    public SaveData(Player player, List<Room> rooms, QuestManager questManager, Arrow arrow){
         this.player = player;
         this.rooms = rooms;
         this.questManager = questManager;
+        this.arrow = arrow;
     }
 
     public void save(){
@@ -22,14 +24,13 @@ public class SaveData implements Serializable {
 
     public static SaveData load(){
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("Savedata.ser"))) {
-            SaveData deserializedData = (SaveData) in.readObject();
-            for(Ability ab : deserializedData.getPlayer().getActiveAbilities()){
-                if(ab == null) continue;
-                System.out.println(ab.getName());
-            }
-            return deserializedData;
+            //            for(Ability ab : deserializedData.getPlayer().getActiveAbilities()){
+//                if(ab == null) continue;
+//                System.out.println(ab.getName());
+//            }
+            return (SaveData) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            Console.print("Could not load Savedata");
         }
         return null;
     }
@@ -44,5 +45,9 @@ public class SaveData implements Serializable {
 
     public QuestManager getQuestManager(){
         return questManager;
+    }
+
+    public Arrow getArrow(){
+        return arrow;
     }
 }

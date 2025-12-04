@@ -17,25 +17,27 @@ public class GameController{
     }
 
     public void takeString(String input){
-        model.getQuestManager().update();
-        Command command = parser.getCommand(input);
-        GameState state = model.processCommand(command);
-        updateState(state);
-        refreshUI();
+        if(model.isWaitingForRespawn()){
+            if(input.isBlank()) {
+                System.out.println("Respawning...");
+                model.respawn();
+                view.setMovementButtonsEnabled(true);
+                return;
+            }else{
+                Console.print("you're dead.");
+            }
+        }else {
+            model.getQuestManager().update();
+            Command command = parser.getCommand(input);
+            GameState state = model.processCommand(command);
+            updateState(state);
+            refreshUI();
+        }
     }
 
     public void onMovementButton(String direction){
         takeString(String.format("go %s", direction.toLowerCase()));
     }
-
-//    public void onAbilityClick(String abilityName) {
-//        if (model.getState() == GameState.FIGHT) {
-//            Battle activeBattle = model.getBattle();
-//            activeBattle.performTurn(abilityName);
-//        }
-//
-//        refreshUI();
-//    }
 
     public void onAbilityClick(int index){
         if(model.getState() == GameState.FIGHT){
@@ -67,36 +69,46 @@ public class GameController{
     public void refreshUI(){
         view.updateHP(model.getPlayer().getHealth());
         view.updateRoom(model.getPlayer().getCurrentRoom().getTitle());
-        view.updateLevel(model.getPlayer().getLevel());
+        view.updateLevel(model.getPlayer().getLevel(), model.getPlayer().getXP());
         view.updateRoomCharacters(model.getPlayer().getCurrentRoom().getCharacters());
         view.updateRoomItems(model.getPlayer().getCurrentRoom().getInventory().getItems());
         view.updateInventory(model.getPlayer().getInventory().getItems());
         view.setAbilityButtons(model.getPlayer().getActiveAbilities());
+
+        if(model.isWaitingForRespawn()){
+            view.setMovementButtonsEnabled(false);
+        }
+
         if(state == GameState.FIGHT){
-            boolean[] usableAbilites = new boolean[4];
+            boolean[] usableAbilities = new boolean[4];
             int i = 0;
             for(int count : model.getPlayer().getUses()){
-                usableAbilites[i++] = count > 0;
-//                System.out.println(usableAbilites[i-1]);
-//                System.out.println(i);
+                usableAbilities[i++] = count > 0;
             }
-            view.updateEnemyHP(model.getBattle().getNPC().getHealth());
-            view.updateAbilityButtons(usableAbilites);
+//            view.updateEnemyHP(model.getBattle().getNPC().getHealth());
+            view.updateEnemyLabel(model.getBattle().getNPC().getName(), model.getBattle().getNPC().getHealth(), model.getBattle().getNPC().getLevel());
+            view.updateAbilityButtons(usableAbilities);
             if(model.getBattle().getPlayerBC().canStruggle()){
                 view.showStruggleButton();
             }
 
         }else if(state == GameState.EXPLORATION){
             if(model.getArrow().hasTargetRoom()){
+//                System.out.println("arrow has a target Room!!!");
+//                System.out.println(model.getArrow().isActivated());
+//                System.out.println(model.getArrow());
                 if(model.getArrow().isActivated()) {
+//                    System.out.println("arrow is activated!!!");
                     view.enableArrow();
 
                     if(model.getArrow().hasReachedTarget()){
+//                        System.out.println("disabling arrow");
                         model.getArrow().deactivate();
                         view.disableArrow();
                         model.getArrow().targetReached();
 //                        System.out.println("Arrow has reached target room");
                     }else {
+//                        System.out.println("updating the arrow");
                         view.updateArrow(model.getArrow().getAngle());
                     }
 
@@ -110,8 +122,4 @@ public class GameController{
     public void selectAbilityIndexRequest(Ability ability){
         view.showAbilityIndexSelector(ability.getName());
     }
-
-//    public void updateSelectedAbilities(int index){
-//        model.getPlayer().setAbilityByIndex(index);
-//    }
 }
