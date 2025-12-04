@@ -6,44 +6,26 @@ public class Arrow extends Item{
     Arrow(){
         super("Arrow", "A mysterious arrow");
         active = false;
-//        System.out.println(targetRoom);
     }
 
     public void use(){
         if (hasTarget){
             active = !active;
-            System.out.printf("has target is true and its %s\n,the arrow is %s\n", targetRoom.getTitle(), (active) ? "active" : "not active");
         }else {
             Console.print("No current goal");
-            System.out.println("no current goal");
             active = false;
         }
     }
 
     public double getAngle() {
-//        System.out.println(target.getX() + " " + target.getY());
-        Room room = ZorkGame.getInstance().getPlayer().currentRoom;
         int yDif = targetRoom.getY() - ZorkGame.getInstance().getPlayer().getCurrentRoom().getY();
         int xDif = targetRoom.getX() - ZorkGame.getInstance().getPlayer().getCurrentRoom().getX();
-        double result = Math.atan2(yDif, xDif);
-//        Console.print(String.format("xdif - %d, ydif - %d", xDif, yDif));
-//        System.out.printf("xdif - %d, ydif - %d\n", xDif, yDif);
-//        System.out.println((result*(180/Math.PI)));
-
-        return result;
+        return Math.atan2(yDif, xDif);
     }
 
     public void deactivate(){
         active = false;
     }
-
-    public void activate(){
-        active = true;
-    }
-
-//    public boolean hasReachedTarget(){
-//        return ZorkGame.getInstance().getPlayer().currentRoom == targetRoom;
-//    }
 
     public boolean hasReachedTarget(){
         return ZorkGame.getInstance().getPlayer().hasBeenTo(targetRoom);
@@ -81,7 +63,6 @@ public class Arrow extends Item{
     public void setName(String name){
         this.name = name;
     }
-
 
     public boolean hasTargetRoom(){
         return targetRoom != null;

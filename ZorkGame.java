@@ -23,7 +23,6 @@ public class ZorkGame {
         instance = this;
         initGame();
         parser = new Parser();
-        //guiParser = new Parser();
     }
 
     public Arrow getArrow(){
@@ -40,14 +39,10 @@ public class ZorkGame {
     private void initGame() {
         waitingForRespawn = false;
 
-
         Room alley, vordhosbnStreet, warehouse, pulsewidthStreet, home, aisatsanaStreet, park, forest, mansionCourtyard, factory, clearing, entranceHall, balcony, grandHall;
 
-
         Ability firestarter = new Ability("firestarter", "the prodigy", 40, 4);
-//        firstarter = new Ability("firestarter", "f", 2)
         Disc firestarterDisc = new Disc(firestarter);
-
 
         // create rooms
         alley = new Room("Alley", "you are in an Alley, graffiti covers the walls", 0, 0);
@@ -118,9 +113,8 @@ public class ZorkGame {
         Item solaceCD = new Disc(solace);
 
 
-        this.questManager = new QuestManager(arrow);
+        this.questManager = new QuestManager();
 
-//        Ability punch = new Ability("punch", "punch", 15, 1);
         Ability takyon = new Ability("takyon", "death grips", 25, 8);
         Character enemy = new Character("hostile", forest, 2, solaceCD);
         enemy.setActiveAbilities(new Ability[]{takyon, null, null, null});
@@ -153,13 +147,11 @@ public class ZorkGame {
 
     public void play() {
         printWelcome();
-
     }
 
     private void printWelcome() {
         Console.print("You were struck with an arrow, the arrow glows mysteriously,\nYou remove the arrow and place it into your Inventory.\nYou feel the arrow pulsing with energy.");
         Console.print("hint: type 'use Arrow' to activate it");
-//        Console.print("Type 'help' if you need help.");
         player.getCurrentRoom().describe();
     }
 
@@ -172,27 +164,13 @@ public class ZorkGame {
         String commandWord = command.getCommandWord();
 
         switch (commandWord) {
-            case null:
-                Console.print("I DONT UNDERSTAND");
-                break;
             case "help":
                 printHelp();
                 break;
             case "go":
                 goRoom(command);
                 break;
-            case "quit":
-                Console.print("quit???????");
-            case "tp":
-                //System.out.printf("Teleporting to %s\n", command.getSecondWord());
-                Console.print("Teleporting to " + command.getSecondWord());
-
-                if (command.hasSecondWord()) {
-                    player.setCurrentRoom(Minimap.rooms.get(command.getSecondWord()));
-                }
-                break;
             case "where":
-                //System.out.printf("You are in %s\n", player.getCurrentRoom().getTitle());
                 Console.print("You are in " + player.getCurrentRoom().getTitle());
                 break;
             case "look":
@@ -203,30 +181,25 @@ public class ZorkGame {
                     Inventory.displayInventory(command.getSecondWord());
                 }
                 else{
-                    //System.out.println("open what?");
                     Console.print("open what?");
                 }
                 break;
             case "take":
                 if (command.hasSecondWord() && player.getCurrentRoom().getInventory().hasItem(command.getSecondWord())) {
-                    //System.out.println("Taking " + command.getSecondWord());
                     Console.print("Taking " + command.getSecondWord());
                     player.getCurrentRoom().getInventory().sendItem(player.getInventory(), player.getCurrentRoom().getInventory().getItem(command.getSecondWord()));
                     if(player.getInventory().getItem(command.getSecondWord()) instanceof Disc){
                         tryShowDiscHint();
                     }
                     }else{
-                    //System.out.println("take what?");
-                    Console.print("take what?");
-                }
+                        Console.print("take what?");
+                    }
                 break;
             case "drop":
                 if (command.hasSecondWord() && player.getInventory().hasItem(command.getSecondWord())) {
-                    //System.out.println("Dropping " + command.getSecondWord());
                     Console.print("Dropping " + command.getSecondWord());
                     player.getInventory().sendItem(player.getCurrentRoom().getInventory(), player.getInventory().getItem(command.getSecondWord()));
                 } else{
-                    //System.out.println("drop what?");
                     Console.print("drop what?");
                 }
                 break;
@@ -268,18 +241,6 @@ public class ZorkGame {
                 }else{
                     Console.print("No save file found");
                 }
-//                SaveData loaded = SaveData.load();
-//                if(loaded == null){
-//                    Console.print("No save file found");
-//                    break;
-//                }
-//                this.player = loaded.getPlayer();
-//                this.questManager = loaded.getQuestManager();
-//                List<Room> rooms = loaded.getRooms();
-//                Minimap.rooms.clear();
-//                for(Room room : rooms){
-//                    Minimap.rooms.put(room.getTitle(), room);
-//                }
                 break;
             case "read":
                 if(command.hasSecondWord() && player.getInventory().hasItem(command.getSecondWord()) && player.getInventory().getItem(command.getSecondWord()) instanceof Disc) {
@@ -288,8 +249,11 @@ public class ZorkGame {
                     Console.print("read what?");
                 }
                 break;
+            case null:
+                Console.print("I don't know what you mean");
+                break;
             default:
-                Console.print("I don't know what you mean............ default casee");
+                Console.print("I don't know what you mean");
                 break;
         }
         return this.state;
@@ -308,10 +272,6 @@ public class ZorkGame {
     }
 
     private void printHelp() {
-        //System.out.println("You are lost. You are alone. You wander around the university.");
-        //System.out.print("Your command words are: ");
-        Console.print("You are lost. You are alone. You wander around the university.");
-        Console.print("Your command words are: ");
         parser.showCommands();
     }
 
@@ -334,9 +294,7 @@ public class ZorkGame {
         Console.clear();
         if(saveFileExists()){
             SaveData saveData = SaveData.load();
-//            this.player = saveData.getPlayer();
             this.player.resetTo(saveData.getPlayer());
-//            this.questManager = saveData.getQuestManager();
             this.questManager.resetTo(saveData.getQuestManager());
             this.arrow = saveData.getArrow();
             System.out.println(saveData.getArrow());
@@ -373,7 +331,6 @@ public class ZorkGame {
 
     private void goRoom(Command command) {
         if (!command.hasSecondWord()) {
-            //System.out.println("Go where?");
             Console.print("Go Where?");
             return;
         }
@@ -385,12 +342,10 @@ public class ZorkGame {
         Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
-            //System.out.println("There is no door!");
-            Console.print("There doesnt seem to be a way to go that direction.");
+            Console.print("There doesn't seem to be a way to go that direction.");
         } else {
             player.setCurrentRoom(nextRoom);
             nextRoom.describe();
-            //System.out.println(player.getCurrentRoom().getTitle());
         }
     }
 

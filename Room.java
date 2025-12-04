@@ -9,17 +9,6 @@ public class Room implements Serializable {
     private String description;
     private int x;
     private int y;
-    private boolean playerHasBeen;
-
-//    public Room(String title, String description, int x, int y){
-//        this.roomTitle = title;
-//        exits = new HashMap<>();
-//        this.description = description;
-//        this.inventory = new Inventory(this.roomTitle);
-//        this.x = x;
-//        this.y = y;
-//        this.playerHasBeen = false;
-//    }
 
     public Room(String title, String description, int x, int y, Item... items){
         this.roomTitle = title;
@@ -28,7 +17,6 @@ public class Room implements Serializable {
         this.x = x;
         this.y = y;
         this.inventory = new Inventory(this.roomTitle, items);
-        this.playerHasBeen = false;
     }
 
     public void describe(){
@@ -103,9 +91,4 @@ public class Room implements Serializable {
     public void removeCharacter(Character character){
         characters.remove(character);
     }
-
-    public boolean hasPlayerBeen(){
-        return playerHasBeen;
-    }
-
 }

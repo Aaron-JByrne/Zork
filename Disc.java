@@ -26,7 +26,6 @@ public class Disc extends Item{
         this.description = description;
     }
 
-
     public void use(){
         Ability abilityCopy = new Ability(this.ability);
         ZorkGame.getInstance().getPlayer().beginSelectAbilityIndex(abilityCopy, this);

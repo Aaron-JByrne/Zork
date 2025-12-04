@@ -14,7 +14,6 @@ public class BattleCharacter {
     }
 
     public boolean[] AbilityUsable(){
-//        System.out.println("AbilityUsable() being called");
         boolean[] usable = new boolean[4];
         int i = 0;
         for(int num : character.getUses()){
@@ -22,7 +21,6 @@ public class BattleCharacter {
                 usable[i++] = true;
             }
         }
-//        System.out.println(Arrays.toString(usable));
         return usable;
     }
 
@@ -32,8 +30,6 @@ public class BattleCharacter {
     }
 
     public boolean canAttack(){
-//        System.out.println("canAttack() being called");
-//        System.out.println(Arrays.toString(AbilityUsable()));
         return AbilityUsable()[0] || AbilityUsable()[1] || AbilityUsable()[2] || AbilityUsable()[3];
     }
 

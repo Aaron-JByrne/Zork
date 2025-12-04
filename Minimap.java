@@ -5,7 +5,6 @@ public class Minimap {
     public Minimap(Room... inrooms) {
         for (Room room : inrooms) {
             rooms.put(room.getTitle(), room);
-//            System.out.println(room.getTitle());
         }
     }
 }

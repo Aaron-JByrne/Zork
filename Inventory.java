@@ -32,14 +32,12 @@ public class Inventory implements Serializable{
 
     public void displayInventory(){
         if (this.items.isEmpty()) {
-            //System.out.println("No items");
             Console.print("No items");
         } else {
-            //System.out.printf("Items in %s:\n", this.name);
             Console.print("Items in " + this.name + ":");
-            //Do I keep as lambda expression?
-            //items.forEach(item -> System.out.println(item.getName()));
-            this.items.forEach(item -> Console.print(item.getName()));
+            for(Item item : this.items){
+                Console.print(item.getName());
+            }
 
         }
     }

@@ -7,11 +7,8 @@ public class CommandWords {
     public CommandWords() {
         validCommands = new HashMap<>();
         validCommands.put("go", "Move to another room");
-        validCommands.put("quit", "End the game");
         validCommands.put("help", "Show help");
         validCommands.put("look", "Look around");
-        validCommands.put("eat", "Eat something");
-        validCommands.put("tp", "teleport");
         validCommands.put("where", "where am I");
         validCommands.put("open", "open an inventory");
         validCommands.put("take", "take an item");

@@ -21,11 +21,6 @@ public class Player extends Character{
     }
 
     public boolean hasBeenTo(Room room){
-//        if(roomsEntered.contains(room)) {
-//            System.out.printf("Player: player has been to %s\n", room.getTitle());
-//        }else{
-//            System.out.printf("Player: player has yet to reach %s\n", room.getTitle());
-//        }
         return roomsEntered.contains(room);
     }
 

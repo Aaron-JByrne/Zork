@@ -1,11 +1,9 @@
-
-
 public class Battle {
     private Character user;
     private Character npc;
     private BattleCharacter player1;
     private BattleCharacter player2;
-    private boolean userPriority; //trash variable name
+    private boolean userPriority;
     private boolean isOver;
     private BattleCharacter loser;
     private BattleCharacter winner;
@@ -26,11 +24,6 @@ public class Battle {
         this.npc = npc;
         this.isOver = false;
         validateMoveSets();
-        System.out.println("BATTLE STARTED");
-    }
-
-    public boolean isFinished(){
-        return isOver;
     }
 
     public Character getNPC(){
@@ -85,44 +78,11 @@ public class Battle {
     public void validateMoveSets(){
         if(!player1.canAttack()) {
             player1.allowStruggle();
-//            end(player1);
         }
         if(!player2.canAttack()){
             player2.allowStruggle();
-//            end(player2);
         }
     }
-//    public boolean performtestturn(String abilityName){
-//        Ability selectedAbility = getAbilityByName(abilityName);
-//        Ability npcAbility = getNPCAbility();
-//
-//        if (userPriority) {
-//            user.useAbility(selectedAbility, npc);
-//            if(hasLost(npc)){
-//                Console.print("BATTLE OVER");
-//                return true;
-//            }
-//            npc.useAbility(npcAbility, user);
-//            if(hasLost(user)){
-//                Console.print("BATTLE OVER");
-//                return true;
-//            }
-//        }
-//        else{
-//            npc.useAbility(selectedAbility, user);
-//            if(hasLost(user)){
-//                Console.print("BATTLE OVER");
-//                return true;
-//            }
-//            user.useAbility(npcAbility, npc);
-//            if(hasLost(npc)){
-//                Console.print("BATTLE OVER");
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
 
     public boolean hasLost(BattleCharacter battleChar){
         if(battleChar.getCharacter().getHealth() <= 0){
@@ -135,10 +95,8 @@ public class Battle {
 
     public void end(BattleCharacter loser){
         this.loser = loser;
-        int xpRewards = (loser.getCharacter().getLevel()*15)+20;
-        xpRewards = 50;
         this.winner = (loser == player2) ? player1 : player2;
-        winner.getCharacter().addXP(xpRewards);
+        winner.getCharacter().addXP(50);
         loser.getCharacter().loseBattle();
         System.out.printf("winner - %s\nloser - %s\n",winner.getCharacter().getName(), loser.getCharacter().getName());
         isOver = true;

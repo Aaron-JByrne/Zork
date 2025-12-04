@@ -2,11 +2,9 @@ import java.util.Scanner;
 
 public class Parser {
     private CommandWords commands;
-    private Scanner reader;
 
     public Parser() {
         commands = new CommandWords();
-        reader = new Scanner(System.in);
     }
 
     public Command getCommand(String input) {

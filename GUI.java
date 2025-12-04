@@ -64,13 +64,9 @@ public class GUI {
         this.controller = controller;
         controller.setView(this);
 
-        //frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-//        frame.add(textField, BorderLayout.SOUTH);
-
-//        frame.add(consoleDisplay, BorderLayout.CENTER);
         frame.add(centerPanel, BorderLayout.CENTER);
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(scrollPane, BorderLayout.CENTER);
@@ -79,11 +75,9 @@ public class GUI {
 
         frame.add(statPanel, BorderLayout.NORTH);
         statPanel.setLayout(new FlowLayout());
-//        statPanel.setPreferredSize(new Dimension(200, 100));
 
-        //frame.add(panel, BorderLayout.EAST);
         fightPanel.setLayout(new BorderLayout());
-//        fightPanel.add(enemyHPLabel);
+
         abilityButtonsPanel.setLayout(new GridLayout(2, 2));
         statPanel.add(hpLabel);
         statPanel.add(roomLabel);
@@ -149,7 +143,7 @@ public class GUI {
             this.arrowLabel.setIcon(new ImageIcon(arrowImage));
             this.arrowLabel.setEnabled(false);
         }catch(Exception e){
-            e.printStackTrace();
+            System.out.println("could not load arrow image");
         }
     }
 
@@ -159,11 +153,8 @@ public class GUI {
     }
 
     public void updateState(GameState state){
-        System.out.println(state);
-//        System.out.printf("%s is current state\n request for %s\n",this.state,state);
         if(this.state != state) {
             this.state = state;
-//            System.out.println("state changed");
             if (this.state == GameState.FIGHT) {
                 setMovementButtonsEnabled(false);
                 textField.setEnabled(false);
@@ -213,7 +204,6 @@ public class GUI {
         public void actionPerformed(ActionEvent e){
             if(state == GameState.EXPLORATION){
                 //if state is exploration, it should be because the player is selecting abilities,
-//                controller.updateSelectedAbilities(index);
                 frame.remove(fightPanel);
                 fightPanel.remove(chooseAbilityLabel);
                 frame.revalidate();
@@ -234,10 +224,6 @@ public class GUI {
     public void updateHP(int hp){
         hpLabel.setText("HP: " + hp);
     }
-
-//    public void updateEnemyHP(int hp){
-//        enemyHPLabel.setText("enemy HP: " + hp);
-//    }
 
     public void updateEnemyLabel(String name, int hp, int level){
         enemyLabel.setText(String.format("%s HP: %d  Level %d",name, hp, level));
@@ -268,6 +254,7 @@ public class GUI {
     public void enableArrow(){
         arrowLabel.setEnabled(true);
     }
+
     public void disableArrow(){
         arrowLabel.setEnabled(false);
     }
@@ -307,9 +294,9 @@ public class GUI {
     }
 
     public BufferedImage rotate(BufferedImage img, double theta){
+        //changing clockwise rotation to counterclockwise rotation
         theta = (-theta);
 
-        //changing clockwise rotation to counterclockwise rotation
         int width = img.getWidth();
         int height = img.getHeight();
 
@@ -317,7 +304,6 @@ public class GUI {
         Graphics2D g2d = imgRotated.createGraphics();
         g2d.rotate(theta, (double) width/2,(double) height/2 );
         g2d.drawImage(img, 0, 0, null);
-//        System.out.println(theta);
 
         return imgRotated;
 

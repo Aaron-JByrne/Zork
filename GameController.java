@@ -19,7 +19,6 @@ public class GameController{
     public void takeString(String input){
         if(model.isWaitingForRespawn()){
             if(input.isBlank()) {
-                System.out.println("Respawning...");
                 model.respawn();
                 view.setMovementButtonsEnabled(true);
                 return;
@@ -51,19 +50,6 @@ public class GameController{
     public void updateState(GameState gameState){
         view.updateState(gameState);
         this.state = gameState;
-//        {
-//            String[] abilityNames = new String[4];
-//            int i = 0;
-//            for(Ability ability : model.getPlayer().getActiveAbilities()) {
-//                if(ability != null){
-//                    abilityNames[i++] = ability.getName();
-//                }
-//                else{
-//                    abilityNames[i++] = "";
-//                }
-//            }
-//            view.setAbilityButtons(abilityNames);
-//        }
     }
 
     public void refreshUI(){
@@ -85,7 +71,6 @@ public class GameController{
             for(int count : model.getPlayer().getUses()){
                 usableAbilities[i++] = count > 0;
             }
-//            view.updateEnemyHP(model.getBattle().getNPC().getHealth());
             view.updateEnemyLabel(model.getBattle().getNPC().getName(), model.getBattle().getNPC().getHealth(), model.getBattle().getNPC().getLevel());
             view.updateAbilityButtons(usableAbilities);
             if(model.getBattle().getPlayerBC().canStruggle()){
@@ -94,21 +79,14 @@ public class GameController{
 
         }else if(state == GameState.EXPLORATION){
             if(model.getArrow().hasTargetRoom()){
-//                System.out.println("arrow has a target Room!!!");
-//                System.out.println(model.getArrow().isActivated());
-//                System.out.println(model.getArrow());
                 if(model.getArrow().isActivated()) {
-//                    System.out.println("arrow is activated!!!");
                     view.enableArrow();
 
                     if(model.getArrow().hasReachedTarget()){
-//                        System.out.println("disabling arrow");
                         model.getArrow().deactivate();
                         view.disableArrow();
                         model.getArrow().targetReached();
-//                        System.out.println("Arrow has reached target room");
                     }else {
-//                        System.out.println("updating the arrow");
                         view.updateArrow(model.getArrow().getAngle());
                     }
 

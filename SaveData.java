@@ -18,16 +18,12 @@ public class SaveData implements Serializable {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Savedata.ser"))) {
             out.writeObject(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            Console.print("Could not save game");
         }
     }
 
     public static SaveData load(){
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("Savedata.ser"))) {
-            //            for(Ability ab : deserializedData.getPlayer().getActiveAbilities()){
-//                if(ab == null) continue;
-//                System.out.println(ab.getName());
-//            }
             return (SaveData) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             Console.print("Could not load Savedata");

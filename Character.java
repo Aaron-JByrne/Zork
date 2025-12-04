@@ -1,7 +1,4 @@
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Character implements Nameable, Serializable {
     protected String name;
@@ -44,43 +41,15 @@ public class Character implements Nameable, Serializable {
         int i=0;
         for(Ability ability : selectedAbilities){
             if(ability != null){
-//                System.out.printf("%s has %d uses left\n",ability.getName(),ability.getUses());
                 uses[i++] = ability.getCurrentUses();
             }
             else{
                 uses[i++] = 0;
             }
         }
-//        System.out.println(Arrays.toString(uses));
         return uses;
     }
 
-//    public void move(String direction) {
-//        Room nextRoom = currentRoom.getExit(direction);
-//        if (nextRoom != null) {
-//            currentRoom = nextRoom;
-//            //System.out.println("You moved to: " + currentRoom.getTitle());
-//            Console.print("You moved to: " + currentRoom.getTitle());
-//        } else {
-//            //System.out.println("You can't go that way!");
-//            Console.print("You can't go that way!");
-//        }
-//    }
-
-//    public void addAbility(Ability ability){
-//        abilities.add(ability);
-//    }
-
-//    public List<Ability> getAbilities(){
-//        return abilities;
-//    }
-
-//    public void displayAbilities(){
-//        int i=1;
-//        for(Ability ability : abilities){
-//            System.out.printf("%d. %s\n",i++,ability.getName());
-//        }
-//    }
     public void addXP(int xp){
         return;
     }
@@ -96,16 +65,6 @@ public class Character implements Nameable, Serializable {
     public void setActiveAbilities(Ability[] abilities){
         this.selectedAbilities = abilities;
     }
-
-//    public void displayStatus(){
-//        Console.print(String.format("%s : %d HP", name, health));
-//    }
-
-//    public void useAbility(Ability ability, Character target){
-//        Console.print(String.format("%s uses %s",this.name, ability.getName()));
-//        ability.use();
-//        target.recieveAttack(ability);
-//    }
 
     public int getHealth(){
         return health;
