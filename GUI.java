@@ -10,7 +10,7 @@ import java.util.List;
 public class GUI {
     private GameController controller;
     GameState state;
-    JFrame frame = new JFrame("ZorkUL");
+    JFrame frame = new JFrame("your bizarre adventure");
 
     JPanel fightPanel = new JPanel();
     JPanel abilityButtonsPanel = new JPanel();
